@@ -4,22 +4,22 @@
     <meta charset="UTF--8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Notes App</title>
+    <!-- <link
+      href="https://cdn.jsdelivr.net/combine/npm/daisyui@5/base/rootcolor.css,npm/daisyui@5/base/rootscrolllock.css,npm/daisyui@5/base/scrollbar.css,npm/daisyui@5/base/reset.css,npm/daisyui@5/base/rootscrollgutter.css,npm/daisyui@5/components/button.css,npm/daisyui@5/components/tab.css,npm/daisyui@5/components/textarea.css,npm/daisyui@5/components/modal.css,npm/daisyui@5/components/fieldset.css,npm/daisyui@5/components/footer.css,npm/daisyui@5/components/input.css,npm/daisyui@5/components/navbar.css,npm/daisyui@5/components/card.css,npm/daisyui@5/components/toggle.css,npm/daisyui@5/components/validator.css,npm/daisyui@5/components/label.css,npm/daisyui@5/components/select.css,npm/daisyui@5/utilities/join.css,npm/daisyui@5/utilities/radius.css,npm/daisyui@5/utilities/typography.css,npm/daisyui@5/colors/properties-extended.css,npm/daisyui@5/colors/responsive.css,npm/daisyui@5/colors/states.css,npm/daisyui@5/colors/properties.css,npm/daisyui@5/colors/responsive-extended.css,npm/daisyui@5/colors/states-extended.css"
+      rel="stylesheet"
+      type="text/css"
+    /> -->
     <link
       href="https://cdn.jsdelivr.net/npm/daisyui@5"
       rel="stylesheet"
       type="text/css"
     />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link
       href="https://cdn.jsdelivr.net/npm/daisyui@5/themes.css"
       rel="stylesheet"
       type="text/css"
     />
-    <!-- <link
-      href="https://cdn.jsdelivr.net/npm/daisyui@4.12.2/dist/full.min.css"
-      rel="stylesheet"
-      type="text/css"
-    /> -->
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
     <style>
       .note-title-truncate {
@@ -45,7 +45,6 @@
   </head>
   <body class="bg-base-200 font-sans">
     <app-bar></app-bar>
-
     <main class="p-4 sm:p-6 md:p-8 max-w-7xl mx-auto flex-grow w-full">
       <div class="mb-12">
         <h2 class="text-2xl font-bold mb-6">Add a New Note</h2>
@@ -59,42 +58,46 @@
           <div
             class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 items-end"
           >
-            <div class="fieldset sm:col-span-2 md:col-span-3">
-              <label class="label"
+            <fieldset class="fieldset sm:col-span-2 md:col-span-3">
+              <label class="label" for="search-input"
                 ><span class="label-text">Search</span></label
               >
               <input
                 type="search"
                 id="search-input"
                 placeholder="Search by title or body..."
-                class="input"
+                class="input input-bordered w-full"
               />
-            </div>
-            <div class="fieldset">
-              <label class="label"><span class="label-text">From</span></label>
+            </fieldset>
+            <fieldset class="fieldset">
+              <label class="label" for="date-from"
+                ><span class="label-text">From</span></label
+              >
               <input
                 type="date"
                 id="date-from"
-                class="input"
+                class="input input-bordered w-full"
               />
-            </div>
-            <div class="fieldset">
-              <label class="label"><span class="label-text">To</span></label>
+            </fieldset>
+            <fieldset class="fieldset">
+              <label class="label" for="date-to"
+                ><span class="label-text">To</span></label
+              >
               <input
                 type="date"
                 id="date-to"
-                class="input"
+                class="input input-bordered w-full"
               />
-            </div>
-            <div class="fieldset">
-              <label class="label"
+            </fieldset>
+            <fieldset class="fieldset">
+              <label class="label" for="sort-by"
                 ><span class="label-text">Sort by</span></label
               >
-              <select id="sort-by" class="select">
+              <select id="sort-by" class="select select-bordered w-full">
                 <option value="newest">Newest</option>
                 <option value="oldest">Oldest</option>
               </select>
-            </div>
+            </fieldset>
           </div>
         </div>
 
