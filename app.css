@@ -3,8 +3,8 @@
   themes: coffee --prefersdark, caramellatte --default;
   include: rootcolor, rootscrolllock, scrollbar, reset, rootscrollgutter, button,
     tab, textarea, modal, fieldset, footer, input, navbar, card, toggle, label,
-    select, badge, join, radius, properties, responsive, states, responsive-extended,
-    properties-extended, states-extended;
+    select, badge, join, radius, properties, responsive, states,
+    responsive-extended, properties-extended, states-extended;
 }
 .note-title-truncate {
   display: -webkit-box;
@@ -21,4 +21,13 @@
   line-clamp: 3;
   overflow: hidden;
   text-align: justify;
+}
+
+.modal .prose textarea {
+  /* Set a max-height to prevent it from growing indefinitely */
+  max-height: 50vh;
+  overflow-wrap: break-word;
+  /* Add a vertical scrollbar only when content overflows the max-height */
+  overflow-y: auto;
+  resize: none;
 }

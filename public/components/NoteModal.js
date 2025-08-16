@@ -28,7 +28,7 @@ class NoteModal extends HTMLElement {
       <h3 class="font-bold text-3xl mb-2">${note.title}</h3>
       <p class="text-sm text-base-content text-opacity-60 mb-6">${formattedDate}</p>
       <div class="prose max-w-none">
-         <textarea class="textarea-ghost w-full bg-base-100 p-0" disabled readonly style="resize: none; overflow-wrap: break-word;">${
+         <textarea id="note-body-textarea" class="textarea-ghost w-full bg-base-100 p-0" disabled readonly>${
            note.body
          }</textarea>
       </div>
@@ -48,6 +48,7 @@ class NoteModal extends HTMLElement {
     `;
 
     this.modal.showModal();
+    this.autosizeTextarea();
 
     // Attach event listeners after content is created
     this.querySelector("#delete-btn").addEventListener("click", (e) => {
@@ -73,6 +74,13 @@ class NoteModal extends HTMLElement {
       );
       this.modal.close();
     });
+  }
+
+  autosizeTextarea() {
+    const textarea = this.querySelector("#note-body-textarea");
+    // Temporarily reset height to calculate the true scroll height
+    textarea.style.height = "auto";
+    textarea.style.height = `${textarea.scrollHeight}px`;
   }
 }
 

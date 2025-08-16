@@ -1647,6 +1647,12 @@
   overflow: hidden;
   text-align: justify;
 }
+.modal .prose textarea {
+  max-height: 50vh;
+  overflow-wrap: break-word;
+  overflow-y: auto;
+  resize: none;
+}
 @layer base {
   :where(:root),:root:has(input.theme-controller[value=caramellatte]:checked),[data-theme=caramellatte] {
     color-scheme: light;
