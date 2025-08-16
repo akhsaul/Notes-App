@@ -1,0 +1,24 @@
+@import "tailwindcss";
+@plugin "daisyui" {
+  themes: coffee --prefersdark, caramellatte --default;
+  include: rootcolor, rootscrolllock, scrollbar, reset, rootscrollgutter, button,
+    tab, textarea, modal, fieldset, footer, input, navbar, card, toggle, label,
+    select, badge, join, radius, properties, responsive, states, responsive-extended,
+    properties-extended, states-extended;
+}
+.note-title-truncate {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  overflow: hidden;
+  text-align: justify;
+}
+.note-body-truncate {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+  text-align: justify;
+}

@@ -1,6 +1,9 @@
 class NoteModal extends HTMLElement {
   constructor() {
     super();
+  }
+
+  connectedCallback() {
     this.innerHTML = `
       <dialog id="note_modal" class="modal">
         <div class="modal-box w-11/12 max-w-3xl">

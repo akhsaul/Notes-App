@@ -4,44 +4,8 @@
     <meta charset="UTF--8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Notes App</title>
-    <!-- <link
-      href="https://cdn.jsdelivr.net/combine/npm/daisyui@5/base/rootcolor.css,npm/daisyui@5/base/rootscrolllock.css,npm/daisyui@5/base/scrollbar.css,npm/daisyui@5/base/reset.css,npm/daisyui@5/base/rootscrollgutter.css,npm/daisyui@5/components/button.css,npm/daisyui@5/components/tab.css,npm/daisyui@5/components/textarea.css,npm/daisyui@5/components/modal.css,npm/daisyui@5/components/fieldset.css,npm/daisyui@5/components/footer.css,npm/daisyui@5/components/input.css,npm/daisyui@5/components/navbar.css,npm/daisyui@5/components/card.css,npm/daisyui@5/components/toggle.css,npm/daisyui@5/components/validator.css,npm/daisyui@5/components/label.css,npm/daisyui@5/components/select.css,npm/daisyui@5/utilities/join.css,npm/daisyui@5/utilities/radius.css,npm/daisyui@5/utilities/typography.css,npm/daisyui@5/colors/properties-extended.css,npm/daisyui@5/colors/responsive.css,npm/daisyui@5/colors/states.css,npm/daisyui@5/colors/properties.css,npm/daisyui@5/colors/responsive-extended.css,npm/daisyui@5/colors/states-extended.css"
-      rel="stylesheet"
-      type="text/css"
-    /> -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/daisyui@5"
-      rel="stylesheet"
-      type="text/css"
-    />
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link
-      href="https://cdn.jsdelivr.net/npm/daisyui@5/themes.css"
-      rel="stylesheet"
-      type="text/css"
-    />
-
-    <style>
-      .note-title-truncate {
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 1;
-        line-clamp: 1;
-        overflow: hidden;
-        text-align: justify;
-      }
-      .note-body-truncate {
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 3;
-        line-clamp: 3;
-        overflow: hidden;
-        text-align: justify;
-      }
-    </style>
-
+    <link href="styles/styles.css" rel="stylesheet" />
     <script src="main.js" type="module"></script>
-    <script src="./components/AppFooter.js" type="module"></script>
   </head>
   <body class="bg-base-200 font-sans">
     <app-bar></app-bar>
@@ -103,10 +67,10 @@
 
         <div role="tablist" class="tabs tabs-lift" id="notes-tabs">
           <a role="tab" class="tab tab-active" data-tab="active"
-            >Active <span class="badge badge-sm ml-2 hidden"></span
+            >Active <span class="badge badge-soft badge-info badge-sm ml-2 hidden"></span
           ></a>
           <a role="tab" class="tab" data-tab="archived"
-            >Archived <span class="badge badge-sm ml-2 hidden"></span
+            >Archived <span class="badge badge-soft badge-info badge-sm ml-2 hidden"></span
           ></a>
         </div>
 

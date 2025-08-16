@@ -1,6 +1,9 @@
 class NoteForm extends HTMLElement {
   constructor() {
     super();
+  }
+
+  connectedCallback() {
     this.innerHTML = `
       <div class="card bg-base-100 shadow-xl">
       <div class="card-body">
@@ -44,9 +47,6 @@ class NoteForm extends HTMLElement {
     this.titleError = this.querySelector("#title-error");
     this.bodyError = this.querySelector("#body-error");
     this.form = this.querySelector("#note-form");
-  }
-
-  connectedCallback() {
     this.titleInput.addEventListener("input", () => this.validateTitle());
     this.bodyInput.addEventListener("input", () => this.validateBody());
     this.form.addEventListener("submit", (e) => {

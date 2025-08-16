@@ -1,11 +1,12 @@
 import "./components/AppBar.js";
+import "./components/AppFooter.js";
 import "./components/NoteForm.js";
 import "./components/NoteItem.js";
 import "./components/NoteModal.js";
-import { loadNotes, saveNotes } from "./data-manager.js";
+import { loadNotes, saveNotes } from "./data/data-manager.js";
 
 document.addEventListener("DOMContentLoaded", () => {
-  const ITEMS_PER_PAGE = 9; // Changed from 12 to 9
+  const ITEMS_PER_PAGE = 9;
   const appState = {
     notes: loadNotes(),
     activeTab: "active",
@@ -113,11 +114,12 @@ document.addEventListener("DOMContentLoaded", () => {
       const join = document.createElement("div");
       join.className = "join";
       for (let i = 1; i <= totalPages; i++) {
-        const pageButton = document.createElement("button");
-        pageButton.className = `join-item btn ${
-          i === appState.currentPage ? "btn-active" : ""
-        }`;
-        pageButton.textContent = i;
+        const pageButton = document.createElement("input");
+        pageButton.type = "radio";
+        pageButton.name = "options";
+        pageButton.ariaLabel = i;
+        pageButton.checked = i === appState.currentPage;
+        pageButton.className = "join-item btn btn-square";
         pageButton.dataset.page = i;
         join.appendChild(pageButton);
       }
