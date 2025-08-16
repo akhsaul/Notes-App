@@ -1648,7 +1648,7 @@
   text-align: justify;
 }
 .modal .prose textarea {
-  max-height: 50vh;
+  max-height: 40vh;
   overflow-wrap: break-word;
   overflow-y: auto;
   resize: none;

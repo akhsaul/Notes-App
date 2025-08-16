@@ -25,7 +25,7 @@
 
 .modal .prose textarea {
   /* Set a max-height to prevent it from growing indefinitely */
-  max-height: 50vh;
+  max-height: 40vh;
   overflow-wrap: break-word;
   /* Add a vertical scrollbar only when content overflows the max-height */
   overflow-y: auto;
