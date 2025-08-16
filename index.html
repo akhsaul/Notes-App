@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF--8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Notes App</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@5"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@5/themes.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <!-- <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@4.12.2/dist/full.min.css"
+      rel="stylesheet"
+      type="text/css"
+    /> -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <style>
+      .note-title-truncate {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 1;
+        line-clamp: 1;
+        overflow: hidden;
+        text-align: justify;
+      }
+      .note-body-truncate {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        line-clamp: 3;
+        overflow: hidden;
+        text-align: justify;
+      }
+    </style>
+
+    <script src="main.js" type="module"></script>
+    <script src="./components/AppFooter.js" type="module"></script>
+  </head>
+  <body class="bg-base-200 font-sans">
+    <app-bar></app-bar>
+
+    <main class="p-4 sm:p-6 md:p-8 max-w-7xl mx-auto flex-grow w-full">
+      <div class="mb-12">
+        <h2 class="text-2xl font-bold mb-6">Add a New Note</h2>
+        <note-form></note-form>
+      </div>
+
+      <div>
+        <h2 class="text-2xl font-bold mb-6">My Notes</h2>
+
+        <div class="p-4 bg-base-100 rounded-xl shadow mb-6">
+          <div
+            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 items-end"
+          >
+            <div class="fieldset sm:col-span-2 md:col-span-3">
+              <label class="label"
+                ><span class="label-text">Search</span></label
+              >
+              <input
+                type="search"
+                id="search-input"
+                placeholder="Search by title or body..."
+                class="input"
+              />
+            </div>
+            <div class="fieldset">
+              <label class="label"><span class="label-text">From</span></label>
+              <input
+                type="date"
+                id="date-from"
+                class="input"
+              />
+            </div>
+            <div class="fieldset">
+              <label class="label"><span class="label-text">To</span></label>
+              <input
+                type="date"
+                id="date-to"
+                class="input"
+              />
+            </div>
+            <div class="fieldset">
+              <label class="label"
+                ><span class="label-text">Sort by</span></label
+              >
+              <select id="sort-by" class="select">
+                <option value="newest">Newest</option>
+                <option value="oldest">Oldest</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div role="tablist" class="tabs tabs-lift" id="notes-tabs">
+          <a role="tab" class="tab tab-active" data-tab="active"
+            >Active <span class="badge badge-sm ml-2 hidden"></span
+          ></a>
+          <a role="tab" class="tab" data-tab="archived"
+            >Archived <span class="badge badge-sm ml-2 hidden"></span
+          ></a>
+        </div>
+
+        <div
+          class="bg-base-100 p-6 rounded-b-xl rounded-tr-xl shadow-lg min-h-96"
+        >
+          <div
+            id="notes-list"
+            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"
+          ></div>
+          <p id="no-notes-message" class="text-center text-lg hidden py-10">
+            No notes found.
+          </p>
+        </div>
+
+        <div id="pagination-container" class="flex justify-center mt-8"></div>
+      </div>
+    </main>
+
+    <note-modal></note-modal>
+    <app-footer></app-footer>
+  </body>
+</html>
