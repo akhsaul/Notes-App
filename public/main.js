@@ -6,7 +6,17 @@ import "./components/NoteModal.js";
 import { loadNotes, saveNotes } from "./data/data-manager.js";
 
 document.addEventListener("DOMContentLoaded", () => {
-  const ITEMS_PER_PAGE = 9;
+  function getItemsPerPage() {
+    if (window.innerWidth >= 1024) {
+      return 9; // lg
+    } else if (window.innerWidth >= 768) {
+      return 6; // md
+    } else {
+      return 3; // sm and smaller
+    }
+  }
+  let itemsPerPage = getItemsPerPage()
+
   const appState = {
     notes: loadNotes(),
     activeTab: "active",
@@ -65,8 +75,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     renderPagination(notesForDisplay.length);
 
-    const startIndex = (appState.currentPage - 1) * ITEMS_PER_PAGE;
-    const endIndex = startIndex + ITEMS_PER_PAGE;
+    const startIndex = (appState.currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
     const paginatedNotes = notesForDisplay.slice(startIndex, endIndex);
 
     renderNotes(paginatedNotes);
@@ -108,7 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function renderPagination(totalNotes) {
-    const totalPages = Math.ceil(totalNotes / ITEMS_PER_PAGE);
+    const totalPages = Math.ceil(totalNotes / itemsPerPage);
     paginationContainer.innerHTML = "";
     if (totalPages > 1) {
       const join = document.createElement("div");
@@ -196,6 +206,14 @@ document.addEventListener("DOMContentLoaded", () => {
     if (note) note.archived = false;
     saveNotes(appState.notes);
     handleFilterChange();
+  });
+
+  window.addEventListener("resize", () => {
+    const newItemsPerPage = getItemsPerPage();
+    if (newItemsPerPage !== itemsPerPage) {
+      itemsPerPage = newItemsPerPage;
+      handleFilterChange();
+    }
   });
 
   renderApp();

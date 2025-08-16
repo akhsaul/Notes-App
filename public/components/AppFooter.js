@@ -5,9 +5,9 @@ class AppFooter extends HTMLElement {
   
   connectedCallback() {
     this.innerHTML = `
-      <footer class="footer footer-horizontal footer-center p-10 bg-base-200 text-base-content rounded">
+      <footer class="footer footer-horizontal footer-center p-10 bg-base-100 text-base-content rounded">
         <nav class="grid grid-flow-col gap-4">
-          <p class="font-bold">Ikhsan Maulana</p>
+          <p class="font-bold text-lg">Ikhsan Maulana</p>
         </nav> 
         <nav>
           <div class="grid grid-flow-col gap-4">
@@ -20,7 +20,7 @@ class AppFooter extends HTMLElement {
           </div>
         </nav> 
         <aside>
-          <p>Copyright © 2024 - All right reserved</p>
+          <p>Copyright © 2025 - All right reserved</p>
         </aside>
       </footer>
     `;

@@ -28,7 +28,9 @@ class NoteModal extends HTMLElement {
       <h3 class="font-bold text-3xl mb-2">${note.title}</h3>
       <p class="text-sm text-base-content text-opacity-60 mb-6">${formattedDate}</p>
       <div class="prose max-w-none">
-        <p>${note.body.replace(/\n/g, "<br>")}</p>
+         <textarea class="textarea-ghost w-full bg-base-100 p-0" disabled readonly style="resize: none; overflow-wrap: break-word;">${
+           note.body
+         }</textarea>
       </div>
       <div class="modal-action mt-6">
         <button class="btn btn-soft btn-error" id="delete-btn" data-id="${

@@ -1313,6 +1313,9 @@
   .cursor-pointer {
     cursor: pointer;
   }
+  .resize {
+    resize: both;
+  }
   .footer-horizontal {
     grid-auto-flow: column;
     &.footer-center {
@@ -1374,6 +1377,17 @@
     }
     background-image: none;
   }
+  .textarea-ghost {
+    background-color: transparent;
+    box-shadow: none;
+    border-color: #0000;
+    &:focus, &:focus-within {
+      background-color: var(--color-base-100);
+      color: var(--color-base-content);
+      border-color: #0000;
+      box-shadow: none;
+    }
+  }
   .bg-base-100 {
     background-color: var(--color-base-100);
   }
@@ -1382,6 +1396,9 @@
   }
   .fill-current {
     fill: currentcolor;
+  }
+  .p-0 {
+    padding: calc(var(--spacing) * 0);
   }
   .p-4 {
     padding: calc(var(--spacing) * 4);
