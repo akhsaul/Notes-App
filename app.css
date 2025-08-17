@@ -3,7 +3,7 @@
   themes: coffee --prefersdark, caramellatte --default;
   include: rootcolor, rootscrolllock, scrollbar, reset, rootscrollgutter, button,
     tab, textarea, modal, fieldset, footer, input, navbar, card, toggle, label,
-    select, badge, join, radius, properties, responsive, states,
+    select, badge, loading, join, radius, properties, responsive, states,
     responsive-extended, properties-extended, states-extended;
 }
 .note-title-truncate {
@@ -30,4 +30,12 @@
   /* Add a vertical scrollbar only when content overflows the max-height */
   overflow-y: auto;
   resize: none;
+}
+
+#loading_modal .loading-spinner {
+  min-width: 10vh;
+}
+
+#loading_modal .modal-box {
+  width: fit-content;
 }

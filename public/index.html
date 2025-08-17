@@ -84,14 +84,6 @@
           class="bg-base-100 p-6 rounded-b-xl rounded-tr-xl shadow-lg min-h-96"
         >
           <div
-            id="loading-indicator"
-            class="hidden col-span-full text-center py-10"
-          >
-            <span
-              class="loading loading-lg loading-spinner text-primary"
-            ></span>
-          </div>
-          <div
             id="notes-list"
             class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"
           ></div>
@@ -106,5 +98,15 @@
 
     <note-modal></note-modal>
     <app-footer></app-footer>
+
+    <dialog id="loading_modal" class="modal">
+      <div class="modal-box flex flex-col items-center">
+        <span class="loading loading-spinner loading-xl text-primary"></span>
+        <p class="mt-4 text-lg">
+          Please wait a minutes
+          <span class="loading loading-dots loading-xs text-primary"></span>
+        </p>
+      </div>
+    </dialog>
   </body>
 </html>

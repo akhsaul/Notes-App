@@ -36,6 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const tabs = document.querySelectorAll("[data-tab]");
   const noNotesMessage = document.getElementById("no-notes-message");
   const paginationContainer = document.getElementById("pagination-container");
+  const loadingModal = document.getElementById("loading_modal");
 
   function renderApp() {
     let filteredNotes = appState.notes;
@@ -223,8 +224,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   NotesAPI.getInstance().addLoadingListener((isLoading) => {
-    const loadingIndicator = document.getElementById("loading-indicator");
-    loadingIndicator.classList.toggle("hidden", !isLoading);
+    if (isLoading) {
+      loadingModal.showModal();
+    } else {
+      loadingModal.close();
+    }
   });
 
   loadAndRenderNotes();
