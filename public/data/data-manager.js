@@ -1,12 +1,12 @@
-import { DicodingNotesAPI } from "./DicodingNotesAPI.js";
-import { LocalStorageFetcher } from "./LocalStorageFetcher.js";
+import { DicodingNotesAPI } from './DicodingNotesAPI.js';
+import { LocalStorageFetcher } from './LocalStorageFetcher.js';
 
 export class NotesAPI {
   /**
    * @type {NotesAPI}
    */
   static #instance;
-  API_MODE = "remote";
+  API_MODE = 'remote';
   /**
    * @type {import('./BaseFetcher').BaseFetcher}
    */
@@ -15,7 +15,7 @@ export class NotesAPI {
   constructor() {
     if (NotesAPI.#instance) {
       throw new Error(
-        "Singleton class. Use NotesAPI.getInstance() to get the instance."
+        'Singleton class. Use NotesAPI.getInstance() to get the instance.'
       );
     }
   }
@@ -28,9 +28,9 @@ export class NotesAPI {
   }
 
   _getFetcher() {
-    if (this.API_MODE === "local") {
+    if (this.API_MODE === 'local') {
       this.fetcher = LocalStorageFetcher.getInstance();
-    } else if (this.API_MODE === "remote") {
+    } else if (this.API_MODE === 'remote') {
       this.fetcher = DicodingNotesAPI.getInstance();
     } else {
       throw new Error(`Mode only accept 'local' or 'remote', got: ${mode}`);
@@ -39,7 +39,7 @@ export class NotesAPI {
   }
 
   setMode(mode) {
-    if (mode === "local" || mode === "remote") {
+    if (mode === 'local' || mode === 'remote') {
       this.API_MODE = mode;
     } else {
       throw new Error(`Mode only accept 'local' or 'remote', got: ${mode}`);

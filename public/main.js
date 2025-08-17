@@ -1,11 +1,11 @@
-import "./components/AppBar.js";
-import "./components/AppFooter.js";
-import "./components/NoteForm.js";
-import "./components/NoteItem.js";
-import "./components/NoteModal.js";
-import { NotesAPI } from "./data/data-manager.js";
+import './components/AppBar.js';
+import './components/AppFooter.js';
+import './components/NoteForm.js';
+import './components/NoteItem.js';
+import './components/NoteModal.js';
+import { NotesAPI } from './data/data-manager.js';
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener('DOMContentLoaded', () => {
   function getItemsPerPage() {
     if (window.innerWidth >= 1024) {
       return 9; // lg
@@ -19,24 +19,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const appState = {
     notes: [],
-    activeTab: "active",
-    searchTerm: "",
-    dateFrom: "",
-    dateTo: "",
-    sortBy: "newest",
+    activeTab: 'active',
+    searchTerm: '',
+    dateFrom: '',
+    dateTo: '',
+    sortBy: 'newest',
     currentPage: 1,
   };
 
-  const notesListElement = document.getElementById("notes-list");
-  const noteModalElement = document.querySelector("note-modal");
-  const searchInput = document.getElementById("search-input");
-  const dateFromInput = document.getElementById("date-from");
-  const dateToInput = document.getElementById("date-to");
-  const sortSelect = document.getElementById("sort-by");
-  const tabs = document.querySelectorAll("[data-tab]");
-  const noNotesMessage = document.getElementById("no-notes-message");
-  const paginationContainer = document.getElementById("pagination-container");
-  const loadingModal = document.getElementById("loading_modal");
+  const notesListElement = document.getElementById('notes-list');
+  const noteModalElement = document.querySelector('note-modal');
+  const searchInput = document.getElementById('search-input');
+  const dateFromInput = document.getElementById('date-from');
+  const dateToInput = document.getElementById('date-to');
+  const sortSelect = document.getElementById('sort-by');
+  const tabs = document.querySelectorAll('[data-tab]');
+  const noNotesMessage = document.getElementById('no-notes-message');
+  const paginationContainer = document.getElementById('pagination-container');
+  const loadingModal = document.getElementById('loading_modal');
 
   function renderApp() {
     let filteredNotes = appState.notes;
@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     updateTabCounts(filteredNotes);
 
-    const isArchivedTab = appState.activeTab === "archived";
+    const isArchivedTab = appState.activeTab === 'archived';
     let notesForDisplay = filteredNotes.filter(
       (note) => note.archived === isArchivedTab
     );
@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
     notesForDisplay.sort((a, b) => {
       const dateA = new Date(a.createdAt);
       const dateB = new Date(b.createdAt);
-      return appState.sortBy === "newest" ? dateB - dateA : dateA - dateB;
+      return appState.sortBy === 'newest' ? dateB - dateA : dateA - dateB;
     });
 
     renderPagination(notesForDisplay.length);
@@ -89,30 +89,30 @@ document.addEventListener("DOMContentLoaded", () => {
     const isFilterActive =
       appState.searchTerm.trim() || appState.dateFrom || appState.dateTo;
     tabs.forEach((tab) => {
-      const badge = tab.querySelector(".badge");
+      const badge = tab.querySelector('.badge');
       const tabType = tab.dataset.tab;
-      const count = tabType === "active" ? activeCount : archivedCount;
+      const count = tabType === 'active' ? activeCount : archivedCount;
       if (isFilterActive) {
         badge.textContent = count;
-        badge.classList.remove("hidden");
+        badge.classList.remove('hidden');
       } else {
-        badge.classList.add("hidden");
+        badge.classList.add('hidden');
       }
     });
   }
 
   function renderNotes(notes) {
-    notesListElement.innerHTML = "";
+    notesListElement.innerHTML = '';
     if (notes.length === 0) {
-      noNotesMessage.classList.remove("hidden");
+      noNotesMessage.classList.remove('hidden');
     } else {
-      noNotesMessage.classList.add("hidden");
+      noNotesMessage.classList.add('hidden');
       notes.forEach((note) => {
-        const noteItem = document.createElement("note-item");
-        noteItem.setAttribute("note-id", note.id);
-        noteItem.setAttribute("title", note.title);
-        noteItem.setAttribute("body", note.body);
-        noteItem.setAttribute("created-at", note.createdAt);
+        const noteItem = document.createElement('note-item');
+        noteItem.setAttribute('note-id', note.id);
+        noteItem.setAttribute('title', note.title);
+        noteItem.setAttribute('body', note.body);
+        noteItem.setAttribute('created-at', note.createdAt);
         notesListElement.appendChild(noteItem);
       });
     }
@@ -120,17 +120,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function renderPagination(totalNotes) {
     const totalPages = Math.ceil(totalNotes / itemsPerPage);
-    paginationContainer.innerHTML = "";
+    paginationContainer.innerHTML = '';
     if (totalPages > 1) {
-      const join = document.createElement("div");
-      join.className = "join";
+      const join = document.createElement('div');
+      join.className = 'join';
       for (let i = 1; i <= totalPages; i++) {
-        const pageButton = document.createElement("input");
-        pageButton.type = "radio";
-        pageButton.name = "options";
+        const pageButton = document.createElement('input');
+        pageButton.type = 'radio';
+        pageButton.name = 'options';
         pageButton.ariaLabel = i;
         pageButton.checked = i === appState.currentPage;
-        pageButton.className = "join-item btn btn-square";
+        pageButton.className = 'join-item btn btn-square';
         pageButton.dataset.page = i;
         join.appendChild(pageButton);
       }
@@ -144,72 +144,72 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // --- Event Listeners ---
-  searchInput.addEventListener("input", (e) => {
+  searchInput.addEventListener('input', (e) => {
     appState.searchTerm = e.target.value;
     handleFilterChange();
   });
-  dateFromInput.addEventListener("change", (e) => {
+  dateFromInput.addEventListener('change', (e) => {
     appState.dateFrom = e.target.value;
     handleFilterChange();
   });
-  dateToInput.addEventListener("change", (e) => {
+  dateToInput.addEventListener('change', (e) => {
     appState.dateTo = e.target.value;
     handleFilterChange();
   });
-  sortSelect.addEventListener("change", (e) => {
+  sortSelect.addEventListener('change', (e) => {
     appState.sortBy = e.target.value;
     handleFilterChange();
   });
 
   tabs.forEach((tab) => {
-    tab.addEventListener("click", (e) => {
+    tab.addEventListener('click', (e) => {
       const clickedTab = e.currentTarget;
-      tabs.forEach((t) => t.classList.remove("tab-active"));
-      clickedTab.classList.add("tab-active");
+      tabs.forEach((t) => t.classList.remove('tab-active'));
+      clickedTab.classList.add('tab-active');
       appState.activeTab = clickedTab.dataset.tab;
       loadAndRenderNotes();
     });
   });
 
-  paginationContainer.addEventListener("click", (e) => {
-    if (e.target.matches("[data-page]")) {
+  paginationContainer.addEventListener('click', (e) => {
+    if (e.target.matches('[data-page]')) {
       appState.currentPage = parseInt(e.target.dataset.page, 10);
       renderApp();
     }
   });
 
-  document.addEventListener("note-added", async (e) => {
+  document.addEventListener('note-added', async (e) => {
     await NotesAPI.getInstance().saveNote(e.detail);
     loadAndRenderNotes();
   });
-  notesListElement.addEventListener("click", (e) => {
-    const card = e.target.closest("[data-note-id]");
+  notesListElement.addEventListener('click', (e) => {
+    const card = e.target.closest('[data-note-id]');
     if (card) {
       const note = appState.notes.find((n) => n.id === card.dataset.noteId);
       if (note) {
-        noteModalElement.setAttribute("note-id", note.id);
-        noteModalElement.setAttribute("title", note.title);
-        noteModalElement.setAttribute("body", note.body);
-        noteModalElement.setAttribute("created-at", note.createdAt);
-        noteModalElement.setAttribute("archived", note.archived);
+        noteModalElement.setAttribute('note-id', note.id);
+        noteModalElement.setAttribute('title', note.title);
+        noteModalElement.setAttribute('body', note.body);
+        noteModalElement.setAttribute('created-at', note.createdAt);
+        noteModalElement.setAttribute('archived', note.archived);
         noteModalElement.show();
       }
     }
   });
-  document.addEventListener("delete-note", async (e) => {
+  document.addEventListener('delete-note', async (e) => {
     await NotesAPI.getInstance().deleteNote(e.detail.id);
     loadAndRenderNotes();
   });
-  document.addEventListener("archive-note", async (e) => {
+  document.addEventListener('archive-note', async (e) => {
     await NotesAPI.getInstance().archiveNote(e.detail.id, true);
     loadAndRenderNotes();
   });
-  document.addEventListener("unarchive-note", async (e) => {
+  document.addEventListener('unarchive-note', async (e) => {
     await NotesAPI.getInstance().archiveNote(e.detail.id, false);
     loadAndRenderNotes();
   });
 
-  window.addEventListener("resize", () => {
+  window.addEventListener('resize', () => {
     const newItemsPerPage = getItemsPerPage();
     if (newItemsPerPage !== itemsPerPage) {
       itemsPerPage = newItemsPerPage;
@@ -218,7 +218,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   async function loadAndRenderNotes() {
-    const isArchived = appState.activeTab === "archived";
+    const isArchived = appState.activeTab === 'archived';
     appState.notes = await NotesAPI.getInstance().loadAllNotes(isArchived);
     renderApp();
   }

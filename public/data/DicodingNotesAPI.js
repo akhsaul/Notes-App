@@ -1,17 +1,17 @@
-import { BaseFetcher } from "./BaseFetcher.js";
+import { BaseFetcher } from './BaseFetcher.js';
 
 export class DicodingNotesAPI extends BaseFetcher {
   /**
    * @type {DicodingNotesAPI}
    */
   static #instance;
-  API_URL = "https://notes-api.dicoding.dev/v2";
+  API_URL = 'https://notes-api.dicoding.dev/v2';
 
   constructor() {
     super();
     if (DicodingNotesAPI.#instance) {
       throw new Error(
-        "Singleton class. Use DicodingNotesAPI.getInstance() to get the instance."
+        'Singleton class. Use DicodingNotesAPI.getInstance() to get the instance.'
       );
     }
   }
@@ -28,7 +28,7 @@ export class DicodingNotesAPI extends BaseFetcher {
     try {
       const response = await fetch(url, options);
       const data = await response.json();
-      if (data.status !== "success") {
+      if (data.status !== 'success') {
         throw new Error(data.message);
       }
       this.successListener(data.data);
@@ -53,7 +53,7 @@ export class DicodingNotesAPI extends BaseFetcher {
   }
 
   async archiveNote(noteId, archived) {
-    const options = { method: "POST" };
+    const options = { method: 'POST' };
     if (archived) {
       return this._fetch(`${this.API_URL}/notes/${noteId}/archive`, options);
     }
@@ -62,9 +62,9 @@ export class DicodingNotesAPI extends BaseFetcher {
 
   async saveNote(note) {
     const options = {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(note),
     };
@@ -72,7 +72,7 @@ export class DicodingNotesAPI extends BaseFetcher {
   }
 
   async deleteNote(noteId) {
-    const options = { method: "DELETE" };
+    const options = { method: 'DELETE' };
     return this._fetch(`${this.API_URL}/notes/${noteId}`, options);
   }
 }

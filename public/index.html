@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" class="scroll-smooth">
   <head>
     <meta charset="UTF--8" />
@@ -6,6 +6,7 @@
     <title>Notes App</title>
     <link href="styles/styles.css" rel="stylesheet" />
     <script src="main.js" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/npm/animejs/lib/anime.iife.min.js"></script>
   </head>
   <body class="bg-base-200 font-sans">
     <app-bar></app-bar>
@@ -20,8 +21,7 @@
 
         <div class="p-4 bg-base-100 rounded-xl shadow mb-6">
           <div
-            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 items-end"
-          >
+            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 items-end">
             <fieldset class="fieldset sm:col-span-2 md:col-span-3">
               <label class="label" for="search-input"
                 ><span class="label-text">Search</span></label
@@ -30,8 +30,7 @@
                 type="search"
                 id="search-input"
                 placeholder="Search by title or body..."
-                class="input input-bordered w-full"
-              />
+                class="input input-bordered w-full" />
             </fieldset>
             <fieldset class="fieldset">
               <label class="label" for="date-from"
@@ -40,8 +39,7 @@
               <input
                 type="date"
                 id="date-from"
-                class="input input-bordered w-full"
-              />
+                class="input input-bordered w-full" />
             </fieldset>
             <fieldset class="fieldset">
               <label class="label" for="date-to"
@@ -50,8 +48,7 @@
               <input
                 type="date"
                 id="date-to"
-                class="input input-bordered w-full"
-              />
+                class="input input-bordered w-full" />
             </fieldset>
             <fieldset class="fieldset">
               <label class="label" for="sort-by"
@@ -69,24 +66,20 @@
           <a role="tab" class="tab tab-active" data-tab="active"
             >Active
             <span
-              class="badge badge-soft badge-info badge-sm ml-2 hidden"
-            ></span
+              class="badge badge-soft badge-info badge-sm ml-2 hidden"></span
           ></a>
           <a role="tab" class="tab" data-tab="archived"
             >Archived
             <span
-              class="badge badge-soft badge-info badge-sm ml-2 hidden"
-            ></span
+              class="badge badge-soft badge-info badge-sm ml-2 hidden"></span
           ></a>
         </div>
 
         <div
-          class="bg-base-100 p-6 rounded-b-xl rounded-tr-xl shadow-lg min-h-96"
-        >
+          class="bg-base-100 p-6 rounded-b-xl rounded-tr-xl shadow-lg min-h-96">
           <div
             id="notes-list"
-            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"
-          ></div>
+            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"></div>
           <p id="no-notes-message" class="text-center text-lg hidden py-10">
             No notes found.
           </p>

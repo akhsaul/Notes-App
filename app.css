@@ -1,8 +1,11 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 @plugin "daisyui" {
-  themes: coffee --prefersdark, caramellatte --default;
-  include: rootcolor, rootscrolllock, scrollbar, reset, rootscrollgutter, button,
-    tab, textarea, modal, fieldset, footer, input, navbar, card, toggle, label,
+  themes:
+    coffee --prefersdark,
+    caramellatte --default;
+  include:
+    rootcolor, rootscrolllock, scrollbar, reset, rootscrollgutter, button, tab,
+    textarea, modal, fieldset, footer, input, navbar, card, toggle, label,
     select, badge, loading, join, radius, properties, responsive, states,
     responsive-extended, properties-extended, states-extended;
 }
