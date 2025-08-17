@@ -1,3 +1,4 @@
+import { DicodingNotesAPI } from "./DicodingNotesAPI.js";
 import { LocalStorageFetcher } from "./LocalStorageFetcher.js";
 
 export class NotesAPI {
@@ -5,7 +6,7 @@ export class NotesAPI {
    * @type {NotesAPI}
    */
   static #instance;
-  API_MODE = "local";
+  API_MODE = "remote";
   /**
    * @type {import('./BaseFetcher').BaseFetcher}
    */
@@ -30,7 +31,7 @@ export class NotesAPI {
     if (this.API_MODE === "local") {
       this.fetcher = LocalStorageFetcher.getInstance();
     } else if (this.API_MODE === "remote") {
-      throw new Error('Not implemented yet')
+      this.fetcher = DicodingNotesAPI.getInstance();
     } else {
       throw new Error(`Mode only accept 'local' or 'remote', got: ${mode}`);
     }
