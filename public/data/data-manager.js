@@ -1,22 +1,79 @@
-import { notesData as initialNotes } from './notes.js';
+import { LocalStorageFetcher } from "./LocalStorageFetcher.js";
 
-const STORAGE_KEY = 'notesApp.notes';
+export class NotesAPI {
+  /**
+   * @type {NotesAPI}
+   */
+  static #instance;
+  API_MODE = "local";
+  /**
+   * @type {import('./BaseFetcher').BaseFetcher}
+   */
+  fetcher;
 
-export function loadNotes() {
-  const storedNotes = localStorage.getItem(STORAGE_KEY);
-  if (storedNotes) {
-    return JSON.parse(storedNotes);
-  } else {
-    // If no data in storage, load initial data and save it.
-    saveNotes(initialNotes); // Fire and forget
-    return initialNotes;
+  constructor() {
+    if (NotesAPI.#instance) {
+      throw new Error(
+        "Singleton class. Use NotesAPI.getInstance() to get the instance."
+      );
+    }
   }
-}
 
-export function saveNotes(notes) {
-  // Wrap in a promise for "fire and forget" style
-  return new Promise((resolve) => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
-    resolve();
-  });
+  static getInstance() {
+    if (!this.#instance) {
+      this.#instance = new NotesAPI();
+    }
+    return this.#instance;
+  }
+
+  _getFetcher() {
+    if (this.API_MODE === "local") {
+      this.fetcher = LocalStorageFetcher.getInstance();
+    } else if (this.API_MODE === "remote") {
+      throw new Error('Not implemented yet')
+    } else {
+      throw new Error(`Mode only accept 'local' or 'remote', got: ${mode}`);
+    }
+    return this.fetcher;
+  }
+
+  setMode(mode) {
+    if (mode === "local" || mode === "remote") {
+      this.API_MODE = mode;
+    } else {
+      throw new Error(`Mode only accept 'local' or 'remote', got: ${mode}`);
+    }
+  }
+
+  addLoadingListener(listener) {
+    return this._getFetcher().addLoadingListener(listener);
+  }
+
+  addSuccessListener(listener) {
+    return this._getFetcher().addSuccessListener(listener);
+  }
+
+  addErrorListener(listener) {
+    return this._getFetcher().addErrorListener(listener);
+  }
+
+  async loadAllNotes(archived) {
+    return this._getFetcher().loadAllNotes(archived);
+  }
+
+  async getNote(id) {
+    return this._getFetcher().getNote(id);
+  }
+
+  async archiveNote(noteId, archived) {
+    return this._getFetcher().archiveNote(noteId, archived);
+  }
+
+  async saveNote(note) {
+    return this._getFetcher().saveNote(note);
+  }
+
+  async deleteNote(noteId) {
+    return this._getFetcher().deleteNote(noteId);
+  }
 }

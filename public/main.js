@@ -3,7 +3,7 @@ import "./components/AppFooter.js";
 import "./components/NoteForm.js";
 import "./components/NoteItem.js";
 import "./components/NoteModal.js";
-import { loadNotes, saveNotes } from "./data/data-manager.js";
+import { NotesAPI } from "./data/data-manager.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   function getItemsPerPage() {
@@ -15,10 +15,10 @@ document.addEventListener("DOMContentLoaded", () => {
       return 3; // sm and smaller
     }
   }
-  let itemsPerPage = getItemsPerPage()
+  let itemsPerPage = getItemsPerPage();
 
   const appState = {
-    notes: loadNotes(),
+    notes: [],
     activeTab: "active",
     searchTerm: "",
     dateFrom: "",
@@ -139,7 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function handleFilterChange() {
     appState.currentPage = 1;
-    renderApp();
+    loadAndRenderNotes();
   }
 
   // --- Event Listeners ---
@@ -166,7 +166,7 @@ document.addEventListener("DOMContentLoaded", () => {
       tabs.forEach((t) => t.classList.remove("tab-active"));
       clickedTab.classList.add("tab-active");
       appState.activeTab = clickedTab.dataset.tab;
-      handleFilterChange();
+      loadAndRenderNotes();
     });
   });
 
@@ -177,35 +177,35 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  document.addEventListener("note-added", (e) => {
-    const newNote = { ...e.detail, createdAt: new Date().toISOString() };
-    appState.notes.unshift(newNote);
-    saveNotes(appState.notes);
-    renderApp();
+  document.addEventListener("note-added", async (e) => {
+    await NotesAPI.getInstance().saveNote(e.detail);
+    loadAndRenderNotes();
   });
   notesListElement.addEventListener("click", (e) => {
     const card = e.target.closest("[data-note-id]");
     if (card) {
       const note = appState.notes.find((n) => n.id === card.dataset.noteId);
-      if (note) noteModalElement.show(note);
+      if (note) {
+        noteModalElement.setAttribute("note-id", note.id);
+        noteModalElement.setAttribute("title", note.title);
+        noteModalElement.setAttribute("body", note.body);
+        noteModalElement.setAttribute("created-at", note.createdAt);
+        noteModalElement.setAttribute("archived", note.archived);
+        noteModalElement.show();
+      }
     }
   });
-  document.addEventListener("delete-note", (e) => {
-    appState.notes = appState.notes.filter((n) => n.id !== e.detail.id);
-    saveNotes(appState.notes);
-    handleFilterChange();
+  document.addEventListener("delete-note", async (e) => {
+    await NotesAPI.getInstance().deleteNote(e.detail.id);
+    loadAndRenderNotes();
   });
-  document.addEventListener("archive-note", (e) => {
-    const note = appState.notes.find((n) => n.id === e.detail.id);
-    if (note) note.archived = true;
-    saveNotes(appState.notes);
-    handleFilterChange();
+  document.addEventListener("archive-note", async (e) => {
+    await NotesAPI.getInstance().archiveNote(e.detail.id, true);
+    loadAndRenderNotes();
   });
-  document.addEventListener("unarchive-note", (e) => {
-    const note = appState.notes.find((n) => n.id === e.detail.id);
-    if (note) note.archived = false;
-    saveNotes(appState.notes);
-    handleFilterChange();
+  document.addEventListener("unarchive-note", async (e) => {
+    await NotesAPI.getInstance().archiveNote(e.detail.id, false);
+    loadAndRenderNotes();
   });
 
   window.addEventListener("resize", () => {
@@ -216,5 +216,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  renderApp();
+  async function loadAndRenderNotes() {
+    const isArchived = appState.activeTab === "archived";
+    appState.notes = await NotesAPI.getInstance().loadAllNotes(isArchived);
+    renderApp();
+  }
+
+  NotesAPI.getInstance().addLoadingListener((isLoading) => {
+    const loadingIndicator = document.getElementById("loading-indicator");
+    loadingIndicator.classList.toggle("hidden", !isLoading);
+  });
+
+  loadAndRenderNotes();
 });

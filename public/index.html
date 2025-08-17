@@ -67,16 +67,30 @@
 
         <div role="tablist" class="tabs tabs-lift" id="notes-tabs">
           <a role="tab" class="tab tab-active" data-tab="active"
-            >Active <span class="badge badge-soft badge-info badge-sm ml-2 hidden"></span
+            >Active
+            <span
+              class="badge badge-soft badge-info badge-sm ml-2 hidden"
+            ></span
           ></a>
           <a role="tab" class="tab" data-tab="archived"
-            >Archived <span class="badge badge-soft badge-info badge-sm ml-2 hidden"></span
+            >Archived
+            <span
+              class="badge badge-soft badge-info badge-sm ml-2 hidden"
+            ></span
           ></a>
         </div>
 
         <div
           class="bg-base-100 p-6 rounded-b-xl rounded-tr-xl shadow-lg min-h-96"
         >
+          <div
+            id="loading-indicator"
+            class="hidden col-span-full text-center py-10"
+          >
+            <span
+              class="loading loading-lg loading-spinner text-primary"
+            ></span>
+          </div>
           <div
             id="notes-list"
             class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"

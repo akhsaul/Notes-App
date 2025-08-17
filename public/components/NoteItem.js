@@ -1,5 +1,4 @@
 class NoteItem extends HTMLElement {
-  static observedAttributes = ["note-id", "title", "body", "created-at"];
 
   constructor() {
     super();

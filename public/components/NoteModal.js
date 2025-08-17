@@ -1,4 +1,12 @@
 class NoteModal extends HTMLElement {
+  static observedAttributes = [
+    "note-id",
+    "title",
+    "body",
+    "created-at",
+    "archived",
+  ];
+
   constructor() {
     super();
   }
@@ -18,35 +26,47 @@ class NoteModal extends HTMLElement {
     this.modalContent = this.querySelector("#modal-content");
   }
 
-  show(note) {
-    const formattedDate = new Date(note.createdAt).toLocaleString(undefined, {
+  attributeChangedCallback() {
+    this.render();
+  }
+
+  render() {
+    const noteId = this.getAttribute("note-id");
+    const title = this.getAttribute("title");
+    const body = this.getAttribute("body");
+    const createdAt = this.getAttribute("created-at");
+    const archivedOrNull = this.getAttribute("archived");
+
+    if (!noteId || !title || !body || !createdAt || !archivedOrNull) {
+      this.modalContent.innerHTML = "";
+      return;
+    }
+
+    const archived = this.getAttribute("archived") === "true";
+    const formattedDate = new Date(createdAt).toLocaleString(undefined, {
       dateStyle: "full",
       timeStyle: "medium",
     });
 
     this.modalContent.innerHTML = `
-      <h3 class="font-bold text-3xl mb-2">${note.title}</h3>
+      <h3 class="font-bold text-3xl mb-2">${title}</h3>
       <p class="text-sm text-base-content text-opacity-60 mb-6">${formattedDate}</p>
       <div class="prose max-w-none">
-         <textarea id="note-body-textarea" class="textarea-ghost w-full bg-base-100 p-0" disabled readonly>${
-           note.body
-         }</textarea>
+         <textarea id="note-body-textarea" class="textarea-ghost w-full bg-base-100 p-0" disabled readonly>${body}</textarea>
       </div>
       <div class="modal-action mt-6">
-        <button class="btn btn-soft btn-error" id="delete-btn" data-id="${
-          note.id
-        }">Delete</button>
-        <button class="btn btn-soft btn-primary" id="archive-btn" data-id="${
-          note.id
-        }" data-archived="${note.archived}">
-          ${note.archived ? "Move to Active" : "Archive"}
+        <button class="btn btn-soft btn-error" id="delete-btn" data-id="${noteId}">Delete</button>
+        <button class="btn btn-soft btn-primary" id="archive-btn" data-id="${noteId}" data-archived="${archived}">
+          ${archived ? "Move to Active" : "Archive"}
         </button>
         <form method="dialog">
           <button class="btn btn-soft btn-secondary">Close</button>
         </form>
       </div>
     `;
+  }
 
+  show() {
     this.modal.showModal();
     this.autosizeTextarea();
 
