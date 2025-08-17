@@ -8,7 +8,7 @@ class NoteForm extends HTMLElement {
       <div class="card bg-base-100 shadow-xl">
       <div class="card-body">
         <fieldset class="fieldset">
-          <form id="note-form" class="flex flex-col gap-4">
+          <form id="note-form" class="flex flex-col gap-4" autocomplete="off" novalidate>
             <label class="label" for="note-title">
               <span class="label-text">Title</span>
             </label>
@@ -52,28 +52,22 @@ class NoteForm extends HTMLElement {
     this.bodyError = this.querySelector("#body-error");
     this.form = this.querySelector("#note-form");
 
-    this.titleInput.addEventListener("change", (e) => {
+    this.titleInput.addEventListener("input", (e) => {
       this.validationTitleHandler(e);
+      this.attachValidatorMessage(e);
     });
-    this.titleInput.addEventListener("invalid", (e) => {
-      this.validationTitleHandler(e);
-    });
-    this.titleInput.addEventListener("blur", this.attachValidatorMessage);
-    this.titleInput.addEventListener("input", this.attachValidatorMessage);
 
-    this.bodyInput.addEventListener("change", (e) => {
-      this.validationBodyHandler;
+    this.bodyInput.addEventListener("input", (e) => {
+      this.validationBodyHandler(e);
+      this.attachValidatorMessage(e);
     });
-    this.bodyInput.addEventListener("invalid", (e) => {
-      this.validationBodyHandler;
-    });
-    this.bodyInput.addEventListener("blur", this.attachValidatorMessage);
-    this.bodyInput.addEventListener("input", this.attachValidatorMessage);
 
     this.form.addEventListener("submit", (e) => {
       e.preventDefault();
-      const isTitleValid = this.validateTitle();
-      const isBodyValid = this.validateBody();
+
+      const isTitleValid = this.titleInput.checkValidity();
+      const isBodyValid = this.bodyInput.checkValidity();
+
       if (isTitleValid && isBodyValid) {
         const newNote = {
           id: `notes-${+new Date()}`,
@@ -129,7 +123,7 @@ class NoteForm extends HTMLElement {
     }
 
     if (event.target.validity.tooShort) {
-      event.target.setCustomValidity("Minimal panjang adalah enam karakter.");
+      event.target.setCustomValidity("Minimal panjang adalah enam huruf.");
       return;
     }
   }
@@ -156,7 +150,7 @@ class NoteForm extends HTMLElement {
     }
 
     if (event.target.validity.tooShort) {
-      event.target.setCustomValidity("Minimal panjang adalah enam karakter.");
+      event.target.setCustomValidity("Minimal panjang adalah enam huruf.");
       return;
     }
   }
