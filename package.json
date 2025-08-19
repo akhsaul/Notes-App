@@ -1,10 +1,12 @@
 {
   "scripts": {
-    "build:css": "npx @tailwindcss/cli -i app.css -o public/output.css"
+    "build:css": "npx @tailwindcss/cli -i app.css -o public/styles/styles.css && npx prettier . --write"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.1.12",
+    "@tailwindcss/typography": "^0.5.16",
     "daisyui": "^5.0.50",
+    "prettier": "^3.6.2",
     "tailwindcss": "^4.1.12"
   },
   "name": "notes-app",

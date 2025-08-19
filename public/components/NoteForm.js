@@ -46,23 +46,23 @@ class NoteForm extends HTMLElement {
     </div>
     `;
 
-    this.titleInput = this.querySelector("#note-title");
-    this.bodyInput = this.querySelector("#note-body");
-    this.titleError = this.querySelector("#title-error");
-    this.bodyError = this.querySelector("#body-error");
-    this.form = this.querySelector("#note-form");
+    this.titleInput = this.querySelector('#note-title');
+    this.bodyInput = this.querySelector('#note-body');
+    this.titleError = this.querySelector('#title-error');
+    this.bodyError = this.querySelector('#body-error');
+    this.form = this.querySelector('#note-form');
 
-    this.titleInput.addEventListener("input", (e) => {
+    this.titleInput.addEventListener('input', (e) => {
       this.validationTitleHandler(e);
       this.attachValidatorMessage(e);
     });
 
-    this.bodyInput.addEventListener("input", (e) => {
+    this.bodyInput.addEventListener('input', (e) => {
       this.validationBodyHandler(e);
       this.attachValidatorMessage(e);
     });
 
-    this.form.addEventListener("submit", (e) => {
+    this.form.addEventListener('submit', (e) => {
       e.preventDefault();
 
       const isTitleValid = this.titleInput.checkValidity();
@@ -77,7 +77,7 @@ class NoteForm extends HTMLElement {
           archived: false,
         };
         this.dispatchEvent(
-          new CustomEvent("note-added", { detail: newNote, bubbles: true })
+          new CustomEvent('note-added', { detail: newNote, bubbles: true })
         );
         this.form.reset();
       }
@@ -89,7 +89,7 @@ class NoteForm extends HTMLElement {
     const isValid = event.target.validity.valid;
     const errorMessage = event.target.validationMessage;
 
-    const connectedValidationId = event.target.getAttribute("aria-describedby");
+    const connectedValidationId = event.target.getAttribute('aria-describedby');
     const connectedValidationEl = connectedValidationId
       ? document.getElementById(connectedValidationId)
       : null;
@@ -97,7 +97,7 @@ class NoteForm extends HTMLElement {
     if (connectedValidationEl && errorMessage && !isValid) {
       connectedValidationEl.innerText = errorMessage;
     } else {
-      connectedValidationEl.innerText = "";
+      connectedValidationEl.innerText = '';
     }
   }
 
@@ -107,23 +107,23 @@ class NoteForm extends HTMLElement {
    * @returns
    */
   validationTitleHandler(event) {
-    event.target.setCustomValidity("");
+    event.target.setCustomValidity('');
 
     if (event.target.validity.valid) {
-      this.titleInput.classList.remove("input-error");
-      this.titleInput.classList.add("input-success");
+      this.titleInput.classList.remove('input-error');
+      this.titleInput.classList.add('input-success');
     } else {
-      this.titleInput.classList.remove("input-success");
-      this.titleInput.classList.add("input-error");
+      this.titleInput.classList.remove('input-success');
+      this.titleInput.classList.add('input-error');
     }
 
     if (event.target.validity.valueMissing) {
-      event.target.setCustomValidity("Wajib diisi.");
+      event.target.setCustomValidity('Wajib diisi.');
       return;
     }
 
     if (event.target.validity.tooShort) {
-      event.target.setCustomValidity("Minimal panjang adalah enam huruf.");
+      event.target.setCustomValidity('Minimal panjang adalah enam huruf.');
       return;
     }
   }
@@ -134,26 +134,26 @@ class NoteForm extends HTMLElement {
    * @returns
    */
   validationBodyHandler(event) {
-    event.target.setCustomValidity("");
+    event.target.setCustomValidity('');
 
     if (event.target.validity.valid) {
-      this.bodyInput.classList.remove("textarea-error");
-      this.titleInput.classList.add("textarea-success");
+      this.bodyInput.classList.remove('textarea-error');
+      this.titleInput.classList.add('textarea-success');
     } else {
-      this.titleInput.classList.remove("textarea-success");
-      this.bodyInput.classList.add("textarea-error");
+      this.titleInput.classList.remove('textarea-success');
+      this.bodyInput.classList.add('textarea-error');
     }
 
     if (event.target.validity.valueMissing) {
-      event.target.setCustomValidity("Wajib diisi.");
+      event.target.setCustomValidity('Wajib diisi.');
       return;
     }
 
     if (event.target.validity.tooShort) {
-      event.target.setCustomValidity("Minimal panjang adalah enam huruf.");
+      event.target.setCustomValidity('Minimal panjang adalah enam huruf.');
       return;
     }
   }
 }
 
-customElements.define("note-form", NoteForm);
+customElements.define('note-form', NoteForm);

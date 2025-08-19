@@ -1,5 +1,5 @@
-import { BaseFetcher } from "./BaseFetcher.js";
-import { notesData as initialNotes } from "./notes.js";
+import { BaseFetcher } from './BaseFetcher.js';
+import { notesData as initialNotes } from './notes.js';
 /**
  * Creates a delay for a specified number of milliseconds.
  * @param {number} ms - The number of milliseconds to wait.
@@ -12,7 +12,7 @@ export class LocalStorageFetcher extends BaseFetcher {
    * @type {LocalStorageFetcher}
    */
   static #instance;
-  STORAGE_KEY = "notesApp.notes";
+  STORAGE_KEY = 'notesApp.notes';
   /**
    * @type {Array}
    */
@@ -22,7 +22,7 @@ export class LocalStorageFetcher extends BaseFetcher {
     super();
     if (LocalStorageFetcher.#instance) {
       throw new Error(
-        "Singleton class. Use LocalStorageFetcher.getInstance() to get the instance."
+        'Singleton class. Use LocalStorageFetcher.getInstance() to get the instance.'
       );
     }
   }
@@ -78,7 +78,7 @@ export class LocalStorageFetcher extends BaseFetcher {
     try {
       const note = this.notesData.find((note) => note.id === id);
       if (note) {
-        this.successListener(note);
+        this.successListener([note]);
         return note;
       } else {
         throw new Error(`Note not found for id: ${id}`);

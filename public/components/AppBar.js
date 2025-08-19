@@ -19,19 +19,19 @@ class AppBar extends HTMLElement {
         </div>
       </div>
     `;
-    const themeController = this.querySelector(".theme-controller");
+    const themeController = this.querySelector('.theme-controller');
     const htmlElement = document.documentElement;
 
-    const savedTheme = localStorage.getItem("theme") || "caramellatte";
-    htmlElement.setAttribute("data-theme", savedTheme);
-    themeController.checked = savedTheme === "coffee";
+    const savedTheme = localStorage.getItem('theme') || 'caramellatte';
+    htmlElement.setAttribute('data-theme', savedTheme);
+    themeController.checked = savedTheme === 'coffee';
 
-    themeController.addEventListener("change", (e) => {
-      const theme = e.target.checked ? "coffee" : "caramellatte";
-      htmlElement.setAttribute("data-theme", theme);
-      localStorage.setItem("theme", theme);
+    themeController.addEventListener('change', (e) => {
+      const theme = e.target.checked ? 'coffee' : 'caramellatte';
+      htmlElement.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', theme);
     });
   }
 }
 
-customElements.define("app-bar", AppBar);
+customElements.define('app-bar', AppBar);

@@ -1,13 +1,16 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" class="scroll-smooth">
   <head>
     <meta charset="UTF--8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Notes App</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;600&amp;family=Noto+Sans+JP:wght@300;900&amp;family=Noto+Sans:wght@300;900&amp;family=Vazirmatn:wght@300;900&amp;display=swap"
+      rel="stylesheet" />
     <link href="styles/styles.css" rel="stylesheet" />
     <script src="main.js" type="module"></script>
   </head>
-  <body class="bg-base-200 font-sans">
+  <body class="bg-base-200">
     <app-bar></app-bar>
     <main class="p-4 sm:p-6 md:p-8 max-w-7xl mx-auto flex-grow w-full">
       <div class="mb-12">
@@ -20,8 +23,7 @@
 
         <div class="p-4 bg-base-100 rounded-xl shadow mb-6">
           <div
-            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 items-end"
-          >
+            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 items-end">
             <fieldset class="fieldset sm:col-span-2 md:col-span-3">
               <label class="label" for="search-input"
                 ><span class="label-text">Search</span></label
@@ -30,8 +32,7 @@
                 type="search"
                 id="search-input"
                 placeholder="Search by title or body..."
-                class="input input-bordered w-full"
-              />
+                class="input input-bordered w-full" />
             </fieldset>
             <fieldset class="fieldset">
               <label class="label" for="date-from"
@@ -40,8 +41,7 @@
               <input
                 type="date"
                 id="date-from"
-                class="input input-bordered w-full"
-              />
+                class="input input-bordered w-full" />
             </fieldset>
             <fieldset class="fieldset">
               <label class="label" for="date-to"
@@ -50,8 +50,7 @@
               <input
                 type="date"
                 id="date-to"
-                class="input input-bordered w-full"
-              />
+                class="input input-bordered w-full" />
             </fieldset>
             <fieldset class="fieldset">
               <label class="label" for="sort-by"
@@ -69,24 +68,20 @@
           <a role="tab" class="tab tab-active" data-tab="active"
             >Active
             <span
-              class="badge badge-soft badge-info badge-sm ml-2 hidden"
-            ></span
+              class="badge badge-soft badge-info badge-sm ml-2 hidden"></span
           ></a>
           <a role="tab" class="tab" data-tab="archived"
             >Archived
             <span
-              class="badge badge-soft badge-info badge-sm ml-2 hidden"
-            ></span
+              class="badge badge-soft badge-info badge-sm ml-2 hidden"></span
           ></a>
         </div>
 
         <div
-          class="bg-base-100 p-6 rounded-b-xl rounded-tr-xl shadow-lg min-h-96"
-        >
+          class="bg-base-100 p-6 rounded-b-xl rounded-tr-xl shadow-lg min-h-96">
           <div
             id="notes-list"
-            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"
-          ></div>
+            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"></div>
           <p id="no-notes-message" class="text-center text-lg hidden py-10">
             No notes found.
           </p>
@@ -97,16 +92,16 @@
     </main>
 
     <note-modal></note-modal>
-    <app-footer></app-footer>
-
     <dialog id="loading_modal" class="modal">
-      <div class="modal-box flex flex-col items-center">
-        <span class="loading loading-spinner loading-xl text-primary"></span>
+      <div class="modal-box text-center w-fit">
+        <span class="loading loading-spinner text-primary"></span>
         <p class="mt-4 text-lg">
-          Please wait a minutes
+          Please wait a seconds
           <span class="loading loading-dots loading-xs text-primary"></span>
         </p>
       </div>
     </dialog>
+    <error-modal></error-modal>
+    <app-footer></app-footer>
   </body>
 </html>
