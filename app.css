@@ -28,13 +28,16 @@
   text-align: justify;
 }
 
+textarea {
+  overflow-wrap: break-word;
+  resize: none;
+  /* Add a vertical scrollbar only when content overflows the max-height */
+  overflow-y: auto;
+}
+
 .modal .prose textarea {
   /* Set a max-height to prevent it from growing indefinitely */
   max-height: 40vh;
-  overflow-wrap: break-word;
-  /* Add a vertical scrollbar only when content overflows the max-height */
-  overflow-y: auto;
-  resize: none;
 }
 
 #loading_modal .loading-spinner {

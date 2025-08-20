@@ -48,8 +48,6 @@ class NoteForm extends HTMLElement {
 
     this.titleInput = this.querySelector('#note-title');
     this.bodyInput = this.querySelector('#note-body');
-    this.titleError = this.querySelector('#title-error');
-    this.bodyError = this.querySelector('#body-error');
     this.form = this.querySelector('#note-form');
 
     this.titleInput.addEventListener('input', (e) => {
@@ -70,11 +68,8 @@ class NoteForm extends HTMLElement {
 
       if (isTitleValid && isBodyValid) {
         const newNote = {
-          id: `notes-${+new Date()}`,
           title: this.titleInput.value,
           body: this.bodyInput.value,
-          createdAt: new Date().toISOString(),
-          archived: false,
         };
         this.dispatchEvent(
           new CustomEvent('note-added', { detail: newNote, bubbles: true })

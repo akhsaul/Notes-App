@@ -39,7 +39,9 @@ export class NotesAPI {
     } else if (this.API_MODE === 'remote') {
       throw new Error('Not implemented yet');
     } else {
-      throw new Error(`Mode only accepts 'local' or 'remote', got: ${mode}`);
+      throw new Error(
+        `Mode only accepts 'local' or 'remote', got: ${this.API_MODE}`
+      );
     }
     return this.fetcher;
   }
@@ -55,34 +57,6 @@ export class NotesAPI {
   addLoadingListener(listener) {
     this.loadingListener = listener;
     return this;
-  }
-
-  async loadArchivedNotes(successListener, errorListener) {
-    this.loadingListener(true);
-    try {
-      const notes = await this._getFetcher().loadAllNotes(true);
-
-      this.loadingListener(false);
-      successListener(notes);
-      return notes;
-    } catch (error) {
-      this.loadingListener(false);
-      errorListener(error);
-    }
-  }
-
-  async loadNotes(successListener, errorListener) {
-    this.loadingListener(true);
-    try {
-      const notes = await this._getFetcher().loadAllNotes(false);
-
-      this.loadingListener(false);
-      successListener(notes);
-      return notes;
-    } catch (error) {
-      this.loadingListener(false);
-      errorListener(error);
-    }
   }
 
   async loadAllNotes(successListener, errorListener) {
@@ -137,7 +111,7 @@ export class NotesAPI {
       await this._getFetcher().deleteNote(noteId);
 
       this.loadingListener(false);
-      await successListener();
+      successListener();
     } catch (error) {
       this.loadingListener(false);
       errorListener(error);
