@@ -215,7 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
   async function loadAndRenderAllNotes(archived = undefined) {
     const onSuccess = () => toast.showSuccess('Notes loaded successfully!');
     const onError = (error) =>
-      toast.showError(`Error when load notes: ${error.message}`);
+      toast.showError(`Error loading notes: ${error.message}`);
 
     let newNotes = [];
     if (archived === undefined) {
@@ -241,7 +241,7 @@ document.addEventListener('DOMContentLoaded', () => {
         successModal.open('Note added successfully!', loadAndRenderAllNotes);
       },
       (error) => {
-        errorModal.open(`Error when archiving note: ${error.message}`);
+        errorModal.open(`Error adding note: ${error.message}`);
       }
     );
   });
@@ -252,7 +252,7 @@ document.addEventListener('DOMContentLoaded', () => {
         successModal.open('Note deleted successfully!', loadAndRenderAllNotes);
       },
       (error) => {
-        errorModal.open(`Error when deleting note: ${error.message}`);
+        errorModal.open(`Error deleting note: ${error.message}`);
       }
     );
   });
@@ -264,7 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
         successModal.open('Note archived successfully!', loadAndRenderAllNotes);
       },
       (error) => {
-        errorModal.open(`Error when archiving note: ${error.message}`);
+        errorModal.open(`Error archiving note: ${error.message}`);
       }
     );
   });
@@ -279,7 +279,7 @@ document.addEventListener('DOMContentLoaded', () => {
         );
       },
       (error) => {
-        errorModal.open(`Error when archiving note: ${error.message}`);
+        errorModal.open(`Error unarchiving note: ${error.message}`);
       }
     );
   });

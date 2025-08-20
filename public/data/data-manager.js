@@ -39,7 +39,7 @@ export class NotesAPI {
     } else if (this.API_MODE === 'remote') {
       throw new Error('Not implemented yet');
     } else {
-      throw new Error(`Mode only accept 'local' or 'remote', got: ${mode}`);
+      throw new Error(`Mode only accepts 'local' or 'remote', got: ${mode}`);
     }
     return this.fetcher;
   }
@@ -48,7 +48,7 @@ export class NotesAPI {
     if (mode === 'local' || mode === 'remote') {
       this.API_MODE = mode;
     } else {
-      throw new Error(`Mode only accept 'local' or 'remote', got: ${mode}`);
+      throw new Error(`Mode only accepts 'local' or 'remote', got: ${mode}`);
     }
   }
 
