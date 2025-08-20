@@ -80,6 +80,8 @@ class NoteForm extends HTMLElement {
           new CustomEvent('note-added', { detail: newNote, bubbles: true })
         );
         this.form.reset();
+        this.titleInput.classList.remove('input-success');
+        this.bodyInput.classList.remove('textarea-success');
       }
     });
   }
