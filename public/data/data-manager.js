@@ -1,6 +1,5 @@
 import { LocalStorageFetcher } from './LocalStorageFetcher.js';
 
-const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 export class NotesAPI {
   /**
    * @type {NotesAPI}
