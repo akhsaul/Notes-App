@@ -56,109 +56,69 @@ export class LocalStorageFetcher extends BaseFetcher {
   }
 
   async loadAllNotes(archived = false) {
-    this.loadingListener(true);
     await delay(5000);
 
-    try {
-      const notes = this.notesData.filter((note) => note.archived === archived);
-      this.successListener(notes);
-      return notes;
-    } catch (error) {
-      this.errorListener(error);
-      return [];
-    } finally {
-      this.loadingListener(false);
-    }
+    const notes = this.notesData.filter((note) => note.archived === archived);
+    return notes;
   }
 
   async getNote(id) {
-    this.loadingListener(true);
     await delay(5000);
 
-    try {
-      const note = this.notesData.find((note) => note.id === id);
-      if (note) {
-        this.successListener([note]);
-        return note;
-      } else {
-        throw new Error(`Note not found for id: ${id}`);
-      }
-    } catch (error) {
-      this.errorListener(error);
-      return null;
-    } finally {
-      this.loadingListener(false);
+    const note = this.notesData.find((note) => note.id === id);
+    if (note) {
+      return note;
+    } else {
+      throw new Error(`Note not found for id: ${id}`);
     }
   }
 
   async archiveNote(noteId, archived) {
-    this.loadingListener(true);
     await delay(5000);
 
-    try {
-      let noteModified = false;
-      const newData = this.notesData.map((n) => {
-        if (n.id === noteId) {
-          noteModified = true;
-          return { ...n, archived };
-        } else {
-          return n;
-        }
-      });
-      if (!noteModified) {
-        throw new Error(`Note not found for id: ${noteId}`);
+    let noteModified = false;
+    const newData = this.notesData.map((n) => {
+      let data;
+      if (n.id === noteId) {
+        noteModified = true;
+        data = { ...n };
+        data.archived = archived;
+      } else {
+        data = { ...n };
       }
-      this.notesData = newData;
-
-      this._saveAllNotes(this.notesData);
-      this.successListener(this.notesData);
-    } catch (error) {
-      this.errorListener(error);
-    } finally {
-      this.loadingListener(false);
+      return data;
+    });
+    if (!noteModified) {
+      throw new Error(`Note not found for id: ${noteId}`);
     }
+
+    this.notesData = newData;
+    this._saveAllNotes(this.notesData);
   }
 
   async saveNote(note) {
-    this.loadingListener(true);
     await delay(5000);
 
-    try {
-      const newNote = {
-        ...note,
-        id: `notes-${Date.now()}`,
-        createdAt: new Date().toISOString(),
-        archived: false,
-      };
-      this.notesData.unshift(newNote);
+    const newNote = {
+      ...note,
+      id: `notes-${Date.now()}`,
+      createdAt: new Date().toISOString(),
+      archived: false,
+    };
 
-      this._saveAllNotes(this.notesData);
-      this.successListener(this.notesData);
-    } catch (error) {
-      this.errorListener(error);
-      reject(error);
-    } finally {
-      this.loadingListener(false);
-    }
+    this.notesData.unshift(newNote);
+    this._saveAllNotes(this.notesData);
   }
 
   async deleteNote(noteId) {
-    this.loadingListener(true);
     await delay(5000);
 
-    try {
-      const newData = this.notesData.filter((n) => n.id !== noteId);
-      if (newData.length === this.notesData.length) {
-        throw new Error(`Note not found for id: ${noteId}`);
-      }
-      this.notesData = newData;
-
-      this._saveAllNotes(this.notesData);
-      this.successListener(this.notesData);
-    } catch (error) {
-      this.errorListener(error);
-    } finally {
-      this.loadingListener(false);
+    const newData = this.notesData.filter((n) => n.id !== noteId);
+    if (newData.length === this.notesData.length) {
+      throw new Error(`Note not found for id: ${noteId}`);
     }
+
+    this.notesData = newData;
+    this._saveAllNotes(this.notesData);
   }
 }

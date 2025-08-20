@@ -1,15 +1,16 @@
-class ErrorModal extends HTMLElement {
+class SuccessModal extends HTMLElement {
   constructor() {
     super();
     this.countdown = undefined;
+    this.onClose = undefined;
   }
 
   connectedCallback() {
     this.innerHTML = `
-      <dialog id="error_modal" class="modal">
+      <dialog id="success_modal" class="modal">
         <div class="modal-box text-center justify-items-center w-fit prose">
-          <span class="loading error-icon text-error"></span>
-          <h2 class="error-message text-error text-justify mt-1 mb-1"></h2>
+          <span class="loading success-icon text-success"></span>
+          <h2 class="success-message text-success text-justify mt-1 mb-1"></h2>
           <p class="auto-close-message italic"></p>
           <div class="modal-action">
             <form method="dialog">
@@ -20,17 +21,22 @@ class ErrorModal extends HTMLElement {
       </dialog>
     `;
 
-    this.dialog = this.querySelector('#error_modal');
-    this.errorMessage = this.querySelector('.error-message');
+    this.dialog = this.querySelector('#success_modal');
+    this.successMessage = this.querySelector('.success-message');
     this.autoCloseMessage = this.querySelector('.auto-close-message');
-
     this.dialog.addEventListener('close', () => {
       clearInterval(this.countdown);
+      this.countdown = undefined;
+      if (this.onClose) {
+        this.onClose();
+      }
     });
   }
 
-  open(message) {
-    this.errorMessage.textContent = message;
+  open(message, onClose = undefined) {
+    this.onClose = onClose;
+
+    this.successMessage.textContent = message;
     let seconds = 5;
     this.autoCloseMessage.textContent = `Automatic close in ${seconds} seconds`;
     this.dialog.showModal();
@@ -45,4 +51,4 @@ class ErrorModal extends HTMLElement {
   }
 }
 
-customElements.define('error-modal', ErrorModal);
+customElements.define('success-modal', SuccessModal);

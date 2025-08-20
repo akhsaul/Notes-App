@@ -1,5 +1,6 @@
 import { LocalStorageFetcher } from './LocalStorageFetcher.js';
 
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 export class NotesAPI {
   /**
    * @type {NotesAPI}
@@ -17,6 +18,13 @@ export class NotesAPI {
         'Singleton class. Use NotesAPI.getInstance() to get the instance.'
       );
     }
+    this.loadingListener = (isLoading) => {
+      if (isLoading) {
+        console.log('Processing data...');
+      } else {
+        console.log('Data processed.');
+      }
+    };
   }
 
   static getInstance() {
@@ -46,37 +54,94 @@ export class NotesAPI {
   }
 
   addLoadingListener(listener) {
-    this._getFetcher().addLoadingListener(listener);
+    this.loadingListener = listener;
     return this;
   }
 
-  addSuccessListener(listener) {
-    this._getFetcher().addSuccessListener(listener);
-    return this;
+  async loadArchivedNotes(successListener, errorListener) {
+    this.loadingListener(true);
+    try {
+      const notes = await this._getFetcher().loadAllNotes(true);
+
+      this.loadingListener(false);
+      successListener(notes);
+      return notes;
+    } catch (error) {
+      this.loadingListener(false);
+      errorListener(error);
+    }
   }
 
-  addErrorListener(listener) {
-    this._getFetcher().addErrorListener(listener);
-    return this;
+  async loadNotes(successListener, errorListener) {
+    this.loadingListener(true);
+    try {
+      const notes = await this._getFetcher().loadAllNotes(false);
+
+      this.loadingListener(false);
+      successListener(notes);
+      return notes;
+    } catch (error) {
+      this.loadingListener(false);
+      errorListener(error);
+    }
   }
 
-  async loadAllNotes(archived) {
-    return this._getFetcher().loadAllNotes(archived);
+  async loadAllNotes(successListener, errorListener) {
+    this.loadingListener(true);
+    try {
+      const archivedNotes = await this._getFetcher().loadAllNotes(true);
+      const activeNotes = await this._getFetcher().loadAllNotes(false);
+      const allNotes = activeNotes.concat(archivedNotes);
+
+      this.loadingListener(false);
+      successListener(allNotes);
+      return allNotes;
+    } catch (error) {
+      this.loadingListener(false);
+      errorListener(error);
+    }
   }
 
   async getNote(id) {
     return this._getFetcher().getNote(id);
   }
 
-  async archiveNote(noteId, archived) {
-    return this._getFetcher().archiveNote(noteId, archived);
+  async archiveNote(noteId, archived, successListener, errorListener) {
+    this.loadingListener(true);
+    try {
+      const note = await this._getFetcher().archiveNote(noteId, archived);
+
+      this.loadingListener(false);
+      successListener(note);
+    } catch (error) {
+      this.loadingListener(false);
+      errorListener(error);
+    }
   }
 
-  async saveNote(note) {
-    return this._getFetcher().saveNote(note);
+  async saveNote(note, successListener, errorListener) {
+    this.loadingListener(true);
+    try {
+      const savedNote = await this._getFetcher().saveNote(note);
+
+      this.loadingListener(false);
+      successListener(savedNote);
+    } catch (error) {
+      this.loadingListener(false);
+      errorListener(error);
+    }
   }
 
-  async deleteNote(noteId) {
-    return this._getFetcher().deleteNote(noteId);
+  async deleteNote(noteId, successListener, errorListener) {
+    this.loadingListener(true);
+    try {
+      await this._getFetcher().deleteNote(noteId);
+
+      this.loadingListener(false);
+      await successListener();
+    } catch (error) {
+      this.loadingListener(false);
+      errorListener(error);
+    }
   }
 }

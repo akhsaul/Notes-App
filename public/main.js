@@ -4,6 +4,8 @@ import './components/NoteForm.js';
 import './components/NoteItem.js';
 import './components/NoteModal.js';
 import './components/ErrorModal.js';
+import './components/Toast.js';
+import './components/SuccessModal.js';
 import { NotesAPI } from './data/data-manager.js';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -36,9 +38,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const tabs = document.querySelectorAll('[data-tab]');
   const noNotesMessage = document.getElementById('no-notes-message');
   const paginationContainer = document.getElementById('pagination-container');
+
   const noteModalElement = document.querySelector('note-modal');
   const loadingModal = document.getElementById('loading_modal');
   const errorModal = document.querySelector('error-modal');
+  const successModal = document.querySelector('success-modal');
+
+  const appBar = document.querySelector('app-bar');
+  const toast = document.querySelector('my-toast');
 
   function renderApp() {
     let filteredNotes = appState.notes;
@@ -149,22 +156,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- Event Listeners for filtering & sorting ---
   searchInput.addEventListener('input', (e) => {
-    console.log(`search input: ${typeof e.target.value}`);
     appState.searchTerm = e.target.value;
     handleFilterChange();
   });
   dateFromInput.addEventListener('change', (e) => {
-    console.log(`date from input: ${typeof e.target.value}`);
     appState.dateFrom = e.target.value;
     handleFilterChange();
   });
   dateToInput.addEventListener('change', (e) => {
-    console.log(`date to input: ${typeof e.target.value}`);
     appState.dateTo = e.target.value;
     handleFilterChange();
   });
   sortSelect.addEventListener('change', (e) => {
-    console.log(`sort input: ${typeof e.target.value}`);
     appState.sortBy = e.target.value;
     handleFilterChange();
   });
@@ -175,8 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
       tabs.forEach((t) => t.classList.remove('tab-active'));
       clickedTab.classList.add('tab-active');
       appState.activeTab = clickedTab.dataset.tab;
-      appState.currentPage = 1;
-      renderApp();
+      handleFilterChange();
     });
   });
 
@@ -210,46 +212,86 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  async function loadAndRenderAllNotes() {
-    //const archivedNotes = await NotesAPI.getInstance().loadAllNotes(true);
-    const archivedNotes = [];
-    const activeNotes = await NotesAPI.getInstance().loadAllNotes(false);
-    appState.notes = [...archivedNotes, ...activeNotes];
+  async function loadAndRenderAllNotes(archived = undefined) {
+    const onSuccess = () => toast.showSuccess('Notes loaded successfully!');
+    const onError = (error) =>
+      toast.showError(`Error when load notes: ${error.message}`);
+
+    let newNotes = [];
+    if (archived === undefined) {
+      newNotes = await NotesAPI.getInstance().loadAllNotes(onSuccess, onError);
+    } else if (archived) {
+      newNotes = await NotesAPI.getInstance().loadArchivedNotes(
+        onSuccess,
+        onError
+      );
+    } else {
+      newNotes = await NotesAPI.getInstance().loadNotes(onSuccess, onError);
+    }
+    appState.notes = newNotes;
+
     renderApp();
   }
 
   // Custom event
   document.addEventListener('note-added', async (e) => {
-    await NotesAPI.getInstance().saveNote(e.detail);
-    await loadAndRenderAllNotes();
+    await NotesAPI.getInstance().saveNote(
+      e.detail,
+      () => {
+        successModal.open('Note added successfully!', loadAndRenderAllNotes);
+      },
+      (error) => {
+        errorModal.open(`Error when archiving note: ${error.message}`);
+      }
+    );
   });
   document.addEventListener('delete-note', async (e) => {
-    await NotesAPI.getInstance().deleteNote(e.detail.id);
-    await loadAndRenderAllNotes();
+    await NotesAPI.getInstance().deleteNote(
+      e.detail.id,
+      () => {
+        successModal.open('Note deleted successfully!', loadAndRenderAllNotes);
+      },
+      (error) => {
+        errorModal.open(`Error when deleting note: ${error.message}`);
+      }
+    );
   });
   document.addEventListener('archive-note', async (e) => {
-    await NotesAPI.getInstance().archiveNote(e.detail.id, true);
-    await loadAndRenderAllNotes();
+    await NotesAPI.getInstance().archiveNote(
+      e.detail.id,
+      true,
+      () => {
+        successModal.open('Note archived successfully!', loadAndRenderAllNotes);
+      },
+      (error) => {
+        errorModal.open(`Error when archiving note: ${error.message}`);
+      }
+    );
   });
   document.addEventListener('unarchive-note', async (e) => {
-    await NotesAPI.getInstance().archiveNote(e.detail.id, false);
-    await loadAndRenderAllNotes();
+    await NotesAPI.getInstance().archiveNote(
+      e.detail.id,
+      false,
+      () => {
+        successModal.open(
+          'Note unarchived successfully!',
+          loadAndRenderAllNotes
+        );
+      },
+      (error) => {
+        errorModal.open(`Error when archiving note: ${error.message}`);
+      }
+    );
   });
 
-  NotesAPI.getInstance()
-    .addLoadingListener((isLoading) => {
-      if (isLoading) {
-        loadingModal.showModal();
-      } else {
-        loadingModal.close();
-      }
-    })
-    .addErrorListener((error) => {
-      errorModal.open(error.message);
-    })
-    .addSuccessListener((notes) => {
-      // TODO
-    });
+  NotesAPI.getInstance().addLoadingListener((isLoading) => {
+    if (isLoading) {
+      loadingModal.showModal();
+    } else {
+      loadingModal.close();
+    }
+  });
 
+  toast.setAttribute('offset-top', `${appBar.offsetHeight}px`);
   loadAndRenderAllNotes();
 });
