@@ -26,6 +26,7 @@ class ErrorModal extends HTMLElement {
 
     this.dialog.addEventListener('close', () => {
       clearInterval(this.countdown);
+      this.countdown = undefined;
     });
   }
 
