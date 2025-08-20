@@ -1,10 +1,10 @@
 class NoteModal extends HTMLElement {
   static observedAttributes = [
-    "note-id",
-    "title",
-    "body",
-    "created-at",
-    "archived",
+    'note-id',
+    'title',
+    'body',
+    'created-at',
+    'archived',
   ];
 
   constructor() {
@@ -22,8 +22,8 @@ class NoteModal extends HTMLElement {
         </div>
       </dialog>
     `;
-    this.modal = this.querySelector("#note_modal");
-    this.modalContent = this.querySelector("#modal-content");
+    this.modal = this.querySelector('#note_modal');
+    this.modalContent = this.querySelector('#modal-content');
   }
 
   attributeChangedCallback() {
@@ -31,21 +31,21 @@ class NoteModal extends HTMLElement {
   }
 
   render() {
-    const noteId = this.getAttribute("note-id");
-    const title = this.getAttribute("title");
-    const body = this.getAttribute("body");
-    const createdAt = this.getAttribute("created-at");
-    const archivedOrNull = this.getAttribute("archived");
+    const noteId = this.getAttribute('note-id');
+    const title = this.getAttribute('title');
+    const body = this.getAttribute('body');
+    const createdAt = this.getAttribute('created-at');
+    const archivedOrNull = this.getAttribute('archived');
 
     if (!noteId || !title || !body || !createdAt || !archivedOrNull) {
-      this.modalContent.innerHTML = "";
+      this.modalContent.innerHTML = '';
       return;
     }
 
-    const archived = this.getAttribute("archived") === "true";
+    const archived = this.getAttribute('archived') === 'true';
     const formattedDate = new Date(createdAt).toLocaleString(undefined, {
-      dateStyle: "full",
-      timeStyle: "medium",
+      dateStyle: 'full',
+      timeStyle: 'medium',
     });
 
     this.modalContent.innerHTML = `
@@ -57,7 +57,7 @@ class NoteModal extends HTMLElement {
       <div class="modal-action mt-6">
         <button class="btn btn-soft btn-error" id="delete-btn" data-id="${noteId}">Delete</button>
         <button class="btn btn-soft btn-primary" id="archive-btn" data-id="${noteId}" data-archived="${archived}">
-          ${archived ? "Move to Active" : "Archive"}
+          ${archived ? 'Move to Active' : 'Archive'}
         </button>
         <form method="dialog">
           <button class="btn btn-soft btn-secondary">Close</button>
@@ -71,9 +71,9 @@ class NoteModal extends HTMLElement {
     this.autosizeTextarea();
 
     // Attach event listeners after content is created
-    this.querySelector("#delete-btn").addEventListener("click", (e) => {
+    this.querySelector('#delete-btn').addEventListener('click', (e) => {
       this.dispatchEvent(
-        new CustomEvent("delete-note", {
+        new CustomEvent('delete-note', {
           detail: { id: e.target.dataset.id },
           bubbles: true,
         })
@@ -81,11 +81,11 @@ class NoteModal extends HTMLElement {
       this.modal.close();
     });
 
-    this.querySelector("#archive-btn").addEventListener("click", (e) => {
+    this.querySelector('#archive-btn').addEventListener('click', (e) => {
       const eventName =
-        e.target.dataset.archived === "true"
-          ? "unarchive-note"
-          : "archive-note";
+        e.target.dataset.archived === 'true'
+          ? 'unarchive-note'
+          : 'archive-note';
       this.dispatchEvent(
         new CustomEvent(eventName, {
           detail: { id: e.target.dataset.id },
@@ -97,11 +97,11 @@ class NoteModal extends HTMLElement {
   }
 
   autosizeTextarea() {
-    const textarea = this.querySelector("#note-body-textarea");
+    const textarea = this.querySelector('#note-body-textarea');
     // Temporarily reset height to calculate the true scroll height
-    textarea.style.height = "auto";
+    textarea.style.height = 'auto';
     textarea.style.height = `${textarea.scrollHeight}px`;
   }
 }
 
-customElements.define("note-modal", NoteModal);
+customElements.define('note-modal', NoteModal);
