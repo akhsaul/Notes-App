@@ -6,9 +6,9 @@ export class NotesAPI {
    * @type {NotesAPI}
    */
   static #instance;
-  API_MODE = 'remote';
+  API_MODE = 'local';
   /**
-   * @type {import('./BaseFetcher').BaseFetcher}
+   * @type {import('./BaseFetcher.js').BaseFetcher}
    */
   fetcher;
 

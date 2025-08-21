@@ -1,13 +1,14 @@
-import './components/AppBar.js';
-import './components/AppFooter.js';
-import './components/NoteForm.js';
-import './components/NoteItem.js';
-import './components/NoteModal.js';
-import './components/ErrorModal.js';
-import './components/Toast.js';
-import './components/SuccessModal.js';
-import './components/NoteList.js';
-import { NotesAPI } from './data/data-manager.js';
+import './script/components/AppBar.js';
+import './script/components/AppFooter.js';
+import './script/components/NoteForm.js';
+import './script/components/NoteItem.js';
+import './script/components/NoteModal.js';
+import './script/components/ErrorModal.js';
+import './script/components/Toast.js';
+import './script/components/SuccessModal.js';
+import './script/components/NoteList.js';
+import './styles/styles.css';
+import { NotesAPI } from './script/data/data-manager.js';
 
 /**
  * Inspired by Kotlin Flow.debounce() (Basic concept).
