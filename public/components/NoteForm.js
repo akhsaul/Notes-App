@@ -8,7 +8,7 @@ class NoteForm extends HTMLElement {
       <div class="card bg-base-100 shadow-xl">
       <div class="card-body">
         <fieldset class="fieldset">
-          <form id="note-form" class="flex flex-col gap-4" autocomplete="off" novalidate>
+          <form id="note-form" class="flex flex-col gap-4" autocomplete="off">
             <label class="label" for="note-title">
               <span class="label-text">Title</span>
             </label>
@@ -48,19 +48,19 @@ class NoteForm extends HTMLElement {
 
     this.titleInput = this.querySelector('#note-title');
     this.bodyInput = this.querySelector('#note-body');
-    this.form = this.querySelector('#note-form');
+    const form = this.querySelector('#note-form');
 
     this.titleInput.addEventListener('input', (e) => {
-      this.validationTitleHandler(e, this.titleInput);
+      this.validationTitleHandler(e);
       this.attachValidatorMessage(e);
     });
 
     this.bodyInput.addEventListener('input', (e) => {
-      this.validationBodyHandler(e, this.bodyInput);
+      this.validationBodyHandler(e);
       this.attachValidatorMessage(e);
     });
 
-    this.form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', (e) => {
       e.preventDefault();
 
       const isTitleValid = this.titleInput.checkValidity();
@@ -74,7 +74,8 @@ class NoteForm extends HTMLElement {
         this.dispatchEvent(
           new CustomEvent('note-added', { detail: newNote, bubbles: true })
         );
-        this.form.reset();
+        // reset form
+        e.target.reset();
         this.titleInput.classList.remove('input-success');
         this.bodyInput.classList.remove('textarea-success');
       }
@@ -102,15 +103,15 @@ class NoteForm extends HTMLElement {
    * @param {Event} event
    * @returns
    */
-  validationTitleHandler(event, inputElement) {
+  validationTitleHandler(event) {
     event.target.setCustomValidity('');
 
     if (event.target.validity.valid) {
-      inputElement.classList.remove('input-error');
-      inputElement.classList.add('input-success');
+      event.target.classList.remove('input-error');
+      event.target.classList.add('input-success');
     } else {
-      inputElement.classList.remove('input-success');
-      inputElement.classList.add('input-error');
+      event.target.classList.remove('input-success');
+      event.target.classList.add('input-error');
     }
 
     if (event.target.validity.valueMissing) {
@@ -129,15 +130,15 @@ class NoteForm extends HTMLElement {
    * @param {Event} event
    * @returns
    */
-  validationBodyHandler(event, inputElement) {
+  validationBodyHandler(event) {
     event.target.setCustomValidity('');
 
     if (event.target.validity.valid) {
-      inputElement.classList.remove('textarea-error');
-      inputElement.classList.add('textarea-success');
+      event.target.classList.remove('textarea-error');
+      event.target.classList.add('textarea-success');
     } else {
-      inputElement.classList.remove('textarea-success');
-      inputElement.classList.add('textarea-error');
+      event.target.classList.remove('textarea-success');
+      event.target.classList.add('textarea-error');
     }
 
     if (event.target.validity.valueMissing) {
