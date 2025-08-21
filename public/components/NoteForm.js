@@ -90,12 +90,9 @@ class NoteForm extends HTMLElement {
     const connectedValidationEl = connectedValidationId
       ? document.getElementById(connectedValidationId)
       : null;
-
-    if (connectedValidationEl && errorMessage && !isValid) {
-      connectedValidationEl.innerText = errorMessage;
-    } else {
-      connectedValidationEl.innerText = '';
-    }
+      
+    connectedValidationEl.innerText =
+      connectedValidationEl && errorMessage && !isValid ? errorMessage : '';
   }
 
   /**
