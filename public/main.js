@@ -3,7 +3,41 @@ import './components/AppFooter.js';
 import './components/NoteForm.js';
 import './components/NoteItem.js';
 import './components/NoteModal.js';
+import './components/ErrorModal.js';
+import './components/Toast.js';
+import './components/SuccessModal.js';
+import './components/NoteList.js';
 import { NotesAPI } from './data/data-manager.js';
+
+/**
+ * Inspired by Kotlin Flow.debounce() (Basic concept).
+ *
+ * Returns a function, that, as long as it continues to be invoked, will not
+ * be triggered. The function will be called after it stops being called for
+ * N milliseconds.
+ *
+ * @param {Function} func The function to debounce.
+ * @param {number} delay The number of milliseconds to delay.
+ * @returns {Function} The debounced function.
+ */
+function debounce(func, delay = 500) {
+  let timeoutId;
+
+  return function (...args) {
+    // Preserve the 'this' context
+    const context = this;
+    // Clear the previous timeout if it exists.
+    // This is the core of debouncing: if the function is called again
+    // before the delay has passed, the previous timer is cancelled.
+    clearTimeout(timeoutId);
+
+    // Set a new timeout. The 'func' will only be called if this timeout
+    // completes without being cleared by another call to the debounced function.
+    timeoutId = setTimeout(() => {
+      func.apply(context, args); // Execute the original function
+    }, delay);
+  };
+}
 
 document.addEventListener('DOMContentLoaded', () => {
   function getItemsPerPage() {
@@ -15,7 +49,6 @@ document.addEventListener('DOMContentLoaded', () => {
       return 3; // sm and smaller
     }
   }
-  let itemsPerPage = getItemsPerPage();
 
   const appState = {
     notes: [],
@@ -25,47 +58,68 @@ document.addEventListener('DOMContentLoaded', () => {
     dateTo: '',
     sortBy: 'newest',
     currentPage: 1,
+    itemsPerPage: getItemsPerPage(),
   };
 
-  const notesListElement = document.getElementById('notes-list');
-  const noteModalElement = document.querySelector('note-modal');
   const searchInput = document.getElementById('search-input');
   const dateFromInput = document.getElementById('date-from');
   const dateToInput = document.getElementById('date-to');
   const sortSelect = document.getElementById('sort-by');
   const tabs = document.querySelectorAll('[data-tab]');
-  const noNotesMessage = document.getElementById('no-notes-message');
   const paginationContainer = document.getElementById('pagination-container');
+
+  const noteModalElement = document.querySelector('note-modal');
   const loadingModal = document.getElementById('loading_modal');
+  const errorModal = document.querySelector('error-modal');
+  const successModal = document.querySelector('success-modal');
+
+  const noteList = document.querySelector('note-list');
+  const appBar = document.querySelector('app-bar');
+  const toast = document.querySelector('my-toast');
 
   function renderApp() {
-    let filteredNotes = appState.notes;
-    const searchTerm = appState.searchTerm.trim().toLowerCase();
-    if (searchTerm) {
-      filteredNotes = filteredNotes.filter(
-        (note) =>
-          note.title.toLowerCase().includes(searchTerm) ||
-          note.body.toLowerCase().includes(searchTerm)
-      );
-    }
-    if (appState.dateFrom) {
-      filteredNotes = filteredNotes.filter(
-        (note) => new Date(note.createdAt) >= new Date(appState.dateFrom)
-      );
-    }
-    if (appState.dateTo) {
-      const toDate = new Date(appState.dateTo);
-      toDate.setHours(23, 59, 59, 999);
-      filteredNotes = filteredNotes.filter(
-        (note) => new Date(note.createdAt) <= toDate
-      );
-    }
+    const searchTerm = appState.searchTerm.toLowerCase().trim();
+    const dateFrom = appState.dateFrom;
+    const dateTo = appState.dateTo;
+    const isFilterActive = searchTerm || dateFrom || dateTo;
 
-    updateTabCounts(filteredNotes);
+    let filteredNotes = appState.notes;
+    // Only call filter if there's something to filter by
+    if (isFilterActive) {
+      // begining of the day (00:00)
+      const fromDate = dateFrom ? new Date(dateFrom) : null;
+      const toDate = dateTo ? new Date(dateTo) : null;
+
+      if (toDate) {
+        // Set to end of day
+        toDate.setHours(23, 59, 59, 999);
+      }
+
+      filteredNotes = filteredNotes.filter((note) => {
+        const noteDate = new Date(note.createdAt);
+
+        const matchesSearch = searchTerm
+          ? note.title.toLowerCase().includes(searchTerm) ||
+            note.body.toLowerCase().includes(searchTerm)
+          : true;
+
+        const matchesDateFrom = fromDate ? noteDate >= fromDate : true;
+
+        const matchesDateTo = toDate ? noteDate <= toDate : true;
+
+        return matchesSearch && matchesDateFrom && matchesDateTo;
+      });
+    }
 
     const isArchivedTab = appState.activeTab === 'archived';
     let notesForDisplay = filteredNotes.filter(
       (note) => note.archived === isArchivedTab
+    );
+
+    updateTabCounts(
+      isFilterActive,
+      notesForDisplay.length,
+      filteredNotes.length - notesForDisplay.length
     );
 
     notesForDisplay.sort((a, b) => {
@@ -74,25 +128,24 @@ document.addEventListener('DOMContentLoaded', () => {
       return appState.sortBy === 'newest' ? dateB - dateA : dateA - dateB;
     });
 
+    // Cut some data to make pagination
+    const startIndex = (appState.currentPage - 1) * appState.itemsPerPage;
+    const endIndex = startIndex + appState.itemsPerPage;
+    const paginatedNotes = notesForDisplay.slice(startIndex, endIndex);
+    // render paging display
     renderPagination(notesForDisplay.length);
 
-    const startIndex = (appState.currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    const paginatedNotes = notesForDisplay.slice(startIndex, endIndex);
-
-    renderNotes(paginatedNotes);
+    // render paginated notes
+    noteList.setNoteList(paginatedNotes);
   }
 
-  function updateTabCounts(filteredNotes) {
-    const activeCount = filteredNotes.filter((n) => !n.archived).length;
-    const archivedCount = filteredNotes.filter((n) => n.archived).length;
-    const isFilterActive =
-      appState.searchTerm.trim() || appState.dateFrom || appState.dateTo;
+  function updateTabCounts(isFilterActive, archivedCount, activeCount) {
     tabs.forEach((tab) => {
       const badge = tab.querySelector('.badge');
-      const tabType = tab.dataset.tab;
-      const count = tabType === 'active' ? activeCount : archivedCount;
+
       if (isFilterActive) {
+        const tabType = tab.dataset.tab;
+        const count = tabType === 'active' ? activeCount : archivedCount;
         badge.textContent = count;
         badge.classList.remove('hidden');
       } else {
@@ -101,25 +154,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  function renderNotes(notes) {
-    notesListElement.innerHTML = '';
-    if (notes.length === 0) {
-      noNotesMessage.classList.remove('hidden');
-    } else {
-      noNotesMessage.classList.add('hidden');
-      notes.forEach((note) => {
-        const noteItem = document.createElement('note-item');
-        noteItem.setAttribute('note-id', note.id);
-        noteItem.setAttribute('title', note.title);
-        noteItem.setAttribute('body', note.body);
-        noteItem.setAttribute('created-at', note.createdAt);
-        notesListElement.appendChild(noteItem);
-      });
-    }
-  }
-
   function renderPagination(totalNotes) {
-    const totalPages = Math.ceil(totalNotes / itemsPerPage);
+    const totalPages = Math.ceil(totalNotes / appState.itemsPerPage);
     paginationContainer.innerHTML = '';
     if (totalPages > 1) {
       const join = document.createElement('div');
@@ -140,26 +176,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function handleFilterChange() {
     appState.currentPage = 1;
-    loadAndRenderNotes();
+    renderApp();
   }
 
-  // --- Event Listeners ---
-  searchInput.addEventListener('input', (e) => {
+  // --- Event Listeners for filtering & sorting ---
+  const debouncedSearchInput = debounce((e) => {
     appState.searchTerm = e.target.value;
     handleFilterChange();
-  });
-  dateFromInput.addEventListener('change', (e) => {
+  }, 500);
+  searchInput.addEventListener('input', debouncedSearchInput);
+
+  const debouncedDateFromInput = debounce((e) => {
     appState.dateFrom = e.target.value;
     handleFilterChange();
-  });
-  dateToInput.addEventListener('change', (e) => {
+  }, 500);
+  dateFromInput.addEventListener('change', debouncedDateFromInput);
+
+  const debouncedDateToInput = debounce((e) => {
     appState.dateTo = e.target.value;
     handleFilterChange();
-  });
-  sortSelect.addEventListener('change', (e) => {
+  }, 500);
+  dateToInput.addEventListener('change', debouncedDateToInput);
+
+  const debouncedSortSelect = debounce((e) => {
     appState.sortBy = e.target.value;
     handleFilterChange();
-  });
+  }, 500);
+  sortSelect.addEventListener('change', debouncedSortSelect);
 
   tabs.forEach((tab) => {
     tab.addEventListener('click', (e) => {
@@ -167,7 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
       tabs.forEach((t) => t.classList.remove('tab-active'));
       clickedTab.classList.add('tab-active');
       appState.activeTab = clickedTab.dataset.tab;
-      loadAndRenderNotes();
+      handleFilterChange();
     });
   });
 
@@ -178,50 +221,80 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  document.addEventListener('note-added', async (e) => {
-    await NotesAPI.getInstance().saveNote(e.detail);
-    loadAndRenderNotes();
-  });
-  notesListElement.addEventListener('click', (e) => {
-    const card = e.target.closest('[data-note-id]');
-    if (card) {
-      const note = appState.notes.find((n) => n.id === card.dataset.noteId);
-      if (note) {
-        noteModalElement.setAttribute('note-id', note.id);
-        noteModalElement.setAttribute('title', note.title);
-        noteModalElement.setAttribute('body', note.body);
-        noteModalElement.setAttribute('created-at', note.createdAt);
-        noteModalElement.setAttribute('archived', note.archived);
-        noteModalElement.show();
-      }
-    }
-  });
-  document.addEventListener('delete-note', async (e) => {
-    await NotesAPI.getInstance().deleteNote(e.detail.id);
-    loadAndRenderNotes();
-  });
-  document.addEventListener('archive-note', async (e) => {
-    await NotesAPI.getInstance().archiveNote(e.detail.id, true);
-    loadAndRenderNotes();
-  });
-  document.addEventListener('unarchive-note', async (e) => {
-    await NotesAPI.getInstance().archiveNote(e.detail.id, false);
-    loadAndRenderNotes();
-  });
-
-  window.addEventListener('resize', () => {
+  // Prevent function running too frequently
+  const debouncedChangeItemsPerPage = debounce(() => {
     const newItemsPerPage = getItemsPerPage();
-    if (newItemsPerPage !== itemsPerPage) {
-      itemsPerPage = newItemsPerPage;
+    if (newItemsPerPage !== appState.itemsPerPage) {
+      appState.itemsPerPage = newItemsPerPage;
       handleFilterChange();
     }
-  });
+  }, 500);
+  window.addEventListener('resize', debouncedChangeItemsPerPage);
 
-  async function loadAndRenderNotes() {
-    const isArchived = appState.activeTab === 'archived';
-    appState.notes = await NotesAPI.getInstance().loadAllNotes(isArchived);
+  async function loadAndRenderAllNotes() {
+    const onSuccess = () => toast.showSuccess('Notes loaded successfully!');
+    const onError = (error) =>
+      toast.showError(`Error loading notes: ${error.message}`);
+
+    let newNotes = await NotesAPI.getInstance().loadAllNotes(
+      onSuccess,
+      onError
+    );
+    appState.notes = newNotes;
+
     renderApp();
   }
+
+  // Custom event
+  document.addEventListener('note-added', async (e) => {
+    await NotesAPI.getInstance().saveNote(
+      e.detail,
+      () => {
+        successModal.open('Note added successfully!', loadAndRenderAllNotes);
+      },
+      (error) => {
+        errorModal.open(`Error adding note: ${error.message}`);
+      }
+    );
+  });
+  document.addEventListener('delete-note', async (e) => {
+    await NotesAPI.getInstance().deleteNote(
+      e.detail.id,
+      () => {
+        successModal.open('Note deleted successfully!', loadAndRenderAllNotes);
+      },
+      (error) => {
+        errorModal.open(`Error deleting note: ${error.message}`);
+      }
+    );
+  });
+  document.addEventListener('archive-note', async (e) => {
+    await NotesAPI.getInstance().archiveNote(
+      e.detail.id,
+      true,
+      () => {
+        successModal.open('Note archived successfully!', loadAndRenderAllNotes);
+      },
+      (error) => {
+        errorModal.open(`Error archiving note: ${error.message}`);
+      }
+    );
+  });
+  document.addEventListener('unarchive-note', async (e) => {
+    await NotesAPI.getInstance().archiveNote(
+      e.detail.id,
+      false,
+      () => {
+        successModal.open(
+          'Note unarchived successfully!',
+          loadAndRenderAllNotes
+        );
+      },
+      (error) => {
+        errorModal.open(`Error unarchiving note: ${error.message}`);
+      }
+    );
+  });
 
   NotesAPI.getInstance().addLoadingListener((isLoading) => {
     if (isLoading) {
@@ -231,5 +304,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  loadAndRenderNotes();
+  noteList.setNoteModal(noteModalElement);
+  toast.setAttribute('offset-top', `${appBar.offsetHeight}px`);
+  loadAndRenderAllNotes();
 });

@@ -4,11 +4,18 @@
     <meta charset="UTF--8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Notes App</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
+    <link rel="manifest" href="site.webmanifest" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;600&amp;family=Noto+Sans+JP:wght@300;900&amp;family=Noto+Sans:wght@300;900&amp;family=Vazirmatn:wght@300;900&amp;display=swap"
+      rel="stylesheet" />
     <link href="styles/styles.css" rel="stylesheet" />
     <script src="main.js" type="module"></script>
     <script src="https://cdn.jsdelivr.net/npm/animejs/lib/anime.iife.min.js"></script>
   </head>
-  <body class="bg-base-200 font-sans">
+  <body class="bg-base-200">
     <app-bar></app-bar>
     <main class="p-4 sm:p-6 md:p-8 max-w-7xl mx-auto flex-grow w-full">
       <div class="mb-12">
@@ -77,12 +84,7 @@
 
         <div
           class="bg-base-100 p-6 rounded-b-xl rounded-tr-xl shadow-lg min-h-96">
-          <div
-            id="notes-list"
-            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"></div>
-          <p id="no-notes-message" class="text-center text-lg hidden py-10">
-            No notes found.
-          </p>
+          <note-list></note-list>
         </div>
 
         <div id="pagination-container" class="flex justify-center mt-8"></div>
@@ -90,16 +92,18 @@
     </main>
 
     <note-modal></note-modal>
-    <app-footer></app-footer>
-
     <dialog id="loading_modal" class="modal">
-      <div class="modal-box flex flex-col items-center">
-        <span class="loading loading-spinner loading-xl text-primary"></span>
+      <div class="modal-box text-center w-fit">
+        <span class="loading loading-spinner text-primary"></span>
         <p class="mt-4 text-lg">
-          Please wait a minutes
+          Please wait a seconds
           <span class="loading loading-dots loading-xs text-primary"></span>
         </p>
       </div>
     </dialog>
+    <error-modal></error-modal>
+    <success-modal></success-modal>
+    <my-toast></my-toast>
+    <app-footer></app-footer>
   </body>
 </html>
