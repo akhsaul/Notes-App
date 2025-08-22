@@ -1,0 +1,5 @@
+# .prettierignore
+# work like .gitignore file
+
+src/styles
+src/public
