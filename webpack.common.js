@@ -3,10 +3,14 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-  entry: path.join(__dirname, 'src/main.js'),
+  entry: {
+    main: path.join(__dirname, 'src/main.js'),
+    //animations: path.join(__dirname, 'src/script/animations/index.js'),
+    components: path.join(__dirname, 'src/script/components/index.js'),
+  },
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: 'bundle.js',
+    filename: '[name].[contenthash].bundle.js',
   },
   module: {
     rules: [

@@ -9,6 +9,7 @@ class NoteModal extends HTMLElement {
 
   constructor() {
     super();
+    this.btnDeleteAnimation = undefined;
   }
 
   connectedCallback() {
@@ -43,7 +44,7 @@ class NoteModal extends HTMLElement {
     this.elementArchiveBtn = this.querySelector('#archive-btn');
 
     // Attach event listeners after content is created
-    this.querySelector('#delete-btn').addEventListener('click', (e) => {
+    /* this.elementDeleteBtn.addEventListener('click', (e) => {
       this.dispatchEvent(
         new CustomEvent('delete-note', {
           detail: { id: e.target.dataset.id },
@@ -51,9 +52,9 @@ class NoteModal extends HTMLElement {
         })
       );
       this.modal.close();
-    });
+    }); */
 
-    this.querySelector('#archive-btn').addEventListener('click', (e) => {
+    this.elementArchiveBtn.addEventListener('click', (e) => {
       const eventName =
         e.target.dataset.archived === 'true'
           ? 'unarchive-note'
@@ -105,6 +106,16 @@ class NoteModal extends HTMLElement {
     // Temporarily reset height to calculate the true scroll height
     this.elementBody.style.height = 'auto';
     this.elementBody.style.height = `${this.elementBody.scrollHeight}px`;
+  }
+
+  setDeleteAnimation(animation) {
+    this.btnDeleteAnimation = animation;
+    this.btnDeleteAnimation
+      .setButton(this.elementDeleteBtn)
+      .setStartText('Hold 3s to Delete')
+      .setProcessingText('Deleting...')
+      .setHoldDuration(3000)
+      .apply();
   }
 }
 

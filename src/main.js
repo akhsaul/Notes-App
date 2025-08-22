@@ -1,14 +1,7 @@
-import './script/components/AppBar.js';
-import './script/components/AppFooter.js';
-import './script/components/NoteForm.js';
-import './script/components/NoteItem.js';
-import './script/components/NoteModal.js';
-import './script/components/ErrorModal.js';
-import './script/components/Toast.js';
-import './script/components/SuccessModal.js';
-import './script/components/NoteList.js';
 import './styles/styles.css';
+import './script/animations/index.js';
 import { NotesAPI } from './script/data/data-manager.js';
+import { CardAnimation, ButtonAnimation } from './script/animations/index.js';
 
 /**
  * Inspired by Kotlin Flow.debounce() (Basic concept).
@@ -40,7 +33,7 @@ function debounce(func, delay = 500) {
   };
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   function getItemsPerPage() {
     if (window.innerWidth >= 1024) {
       return 9; // lg
@@ -136,6 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // render paging display
     renderPagination(notesForDisplay.length);
 
+    noteList.scrollIntoView()
     // render paginated notes
     noteList.setNoteList(paginatedNotes);
   }
@@ -305,6 +299,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  noteModalElement.setDeleteAnimation(new ButtonAnimation());
+  noteList.setAnimation(new CardAnimation());
   noteList.setNoteModal(noteModalElement);
   toast.setAttribute('offset-top', `${appBar.offsetHeight}px`);
   loadAndRenderAllNotes();
