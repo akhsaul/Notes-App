@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animated Modal with Anime.js</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Anime.js for animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <style>
+        /* Using Inter font from Google Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom transition for a smoother feel on the button */
+        .custom-btn {
+            transition: transform 0.2s ease-out, background-color 0.2s ease-out;
+        }
+        .custom-btn:hover {
+            transform: translateY(-2px);
+        }
+        /* Add perspective for the 3D flip animation to work correctly */
+        #modal-overlay {
+            perspective: 1200px;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white flex items-center justify-center min-h-screen">
+
+    <!-- Button to trigger the modal -->
+    <button id="openModalBtn" class="custom-btn bg-pink-600 hover:bg-pink-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg">
+        Become an Expert
+    </button>
+
+    <!-- Modal Structure -->
+    <div id="modal-overlay" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4" style="display: none;">
+        <!-- The modal itself -->
+        <div id="modal" class="bg-gray-800 w-full max-w-md mx-auto rounded-2xl shadow-2xl p-8 text-white border border-gray-700">
+            <!-- Modal Header -->
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-3xl font-bold">Confirm</h2>
+                <button id="closeModalIcon" class="text-gray-400 hover:text-white transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- Modal Body -->
+            <p class="text-gray-300 mb-8 text-lg">
+                Are you sure you want to become a Motion expert?
+            </p>
+
+            <!-- Modal Footer with Buttons -->
+            <div class="flex justify-end space-x-4">
+                <button id="cancelBtn" class="custom-btn bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2 px-5 rounded-lg">
+                    Cancel
+                </button>
+                <button id="confirmBtn" class="custom-btn bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 px-5 rounded-lg shadow-md">
+                    Expert me
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get all the necessary DOM elements
+        const openModalBtn = document.getElementById('openModalBtn');
+        const modalOverlay = document.getElementById('modal-overlay');
+        const modal = document.getElementById('modal');
+        const closeModalIcon = document.getElementById('closeModalIcon');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const confirmBtn = document.getElementById('confirmBtn');
+
+        // --- Animation Timelines ---
+        let openAnimation = null;
+        let closeAnimation = null;
+
+        // Function to set up and play the open animation
+        function playOpenAnimation() {
+            // Ensure elements are visible before animating
+            modalOverlay.style.display = 'flex';
+            
+            // Cancel any ongoing close animation
+            if (closeAnimation) closeAnimation.pause();
+
+            // Create a new animation timeline with Anime.js
+            openAnimation = anime.timeline({
+                // Using a smoother easing function
+                easing: 'easeInOutCubic',
+                // Increased duration for a slower animation
+                duration: 1200 
+            });
+
+            openAnimation
+                .add({
+                    targets: modalOverlay,
+                    opacity: [0, 1], // Fade in the overlay
+                    duration: 500,
+                    easing: 'easeOutExpo' // Use a simpler ease for the background fade
+                })
+                .add({
+                    targets: modal,
+                    opacity: [0, 1], // Fade in the modal
+                    scale: [0.95, 1], // Scale up from 95% to 100%
+                    rotateY: ['45deg', '0deg'], // Flip from right (45deg) to center (0deg)
+                    filter: ['blur(16px)', 'blur(0px)'] // Animate from blurred to clear
+                }, '-=400'); // Start this animation near the beginning of the overlay fade-in
+        }
+
+        // Function to set up and play the close animation
+        function playCloseAnimation() {
+            // Cancel any ongoing open animation
+            if (openAnimation) openAnimation.pause();
+
+            // Create a new animation timeline that mirrors the open animation
+            closeAnimation = anime.timeline({
+                // Using a smoother easing function
+                easing: 'easeInOutCubic',
+                // Match the open animation's duration for a perfect reversal
+                duration: 1200,
+                // Hide the overlay after the animation is complete
+                complete: () => {
+                    modalOverlay.style.display = 'none';
+                }
+            });
+
+            closeAnimation
+                .add({
+                    targets: modal,
+                    opacity: [1, 0], // Reversing open animation
+                    scale: [1, 0.95], // Reversing open animation
+                    rotateY: ['0deg', '45deg'], // Reversing open animation's flip
+                    filter: ['blur(0px)', 'blur(16px)'] // Animate from clear to blurred
+                })
+                .add({
+                    targets: modalOverlay,
+                    opacity: [1, 0], // Reversing open animation
+                    duration: 500, // Match overlay duration
+                    easing: 'easeInExpo' // Logical reverse of easeOutExpo
+                }, '-=1100'); // Adjust offset to mirror the open animation's timing
+        }
+
+        // --- Event Listeners ---
+        openModalBtn.addEventListener('click', playOpenAnimation);
+        
+        // Add close event to multiple elements
+        [closeModalIcon, cancelBtn, confirmBtn, modalOverlay].forEach(el => {
+            el.addEventListener('click', (e) => {
+                // Only close if the click is on the overlay itself, not its children (the modal)
+                if (e.target === modalOverlay) {
+                    playCloseAnimation();
+                } else if (el !== modalOverlay) { // Or if it's one of the buttons
+                    playCloseAnimation();
+                }
+            });
+        });
+
+        // Prevent clicks inside the modal from closing it via the overlay listener
+        modal.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+
+    </script>
+</body>
+</html>
