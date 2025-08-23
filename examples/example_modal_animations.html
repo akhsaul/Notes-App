@@ -7,7 +7,7 @@
     <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Anime.js for animations -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/animejs@4.1.3/lib/anime.umd.min.js"></script>
     <style>
         /* Using Inter font from Google Fonts */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
@@ -24,6 +24,11 @@
         /* Add perspective for the 3D flip animation to work correctly */
         #modal-overlay {
             perspective: 1200px;
+        }
+        #modal{
+            opacity: 0;
+            transform: scale(0.95) rotateY(45deg);
+            filter: blur(16px);
         }
     </style>
 </head>
@@ -66,6 +71,7 @@
     </div>
 
     <script>
+        const { createTimeline } = anime;
         // Get all the necessary DOM elements
         const openModalBtn = document.getElementById('openModalBtn');
         const modalOverlay = document.getElementById('modal-overlay');
@@ -80,79 +86,70 @@
 
         // Function to set up and play the open animation
         function playOpenAnimation() {
-            // Ensure elements are visible before animating
-            modalOverlay.style.display = 'flex';
-            
-            // Cancel any ongoing close animation
             if (closeAnimation) closeAnimation.pause();
-
-            // Create a new animation timeline with Anime.js
-            openAnimation = anime.timeline({
-                // Using a smoother easing function
-                easing: 'easeInOutCubic',
-                // Increased duration for a slower animation
-                duration: 1200 
+            
+            openAnimation = createTimeline({
+                defaults: {
+                    ease: 'easeInOutCubic',
+                    duration: 1200 
+                }
             });
 
             openAnimation
-                .add({
-                    targets: modalOverlay,
-                    opacity: [0, 1], // Fade in the overlay
+                .add(modalOverlay, {
+                    opacity: [0, 1],
                     duration: 500,
-                    easing: 'easeOutExpo' // Use a simpler ease for the background fade
+                    ease: 'easeOutExpo'
                 })
-                .add({
-                    targets: modal,
-                    opacity: [0, 1], // Fade in the modal
-                    scale: [0.95, 1], // Scale up from 95% to 100%
-                    rotateY: ['45deg', '0deg'], // Flip from right (45deg) to center (0deg)
-                    filter: ['blur(16px)', 'blur(0px)'] // Animate from blurred to clear
-                }, '-=400'); // Start this animation near the beginning of the overlay fade-in
+                .add(modal, {
+                    opacity: [0, 1],
+                    scale: [0.95, 1],
+                    rotateY: ['45deg', '0deg'],
+                    filter: ['blur(16px)', 'blur(0px)']
+                }, '-=400');
+            
+            modalOverlay.style.display = 'flex';
+            openAnimation.play();
         }
 
         // Function to set up and play the close animation
         function playCloseAnimation() {
-            // Cancel any ongoing open animation
             if (openAnimation) openAnimation.pause();
 
-            // Create a new animation timeline that mirrors the open animation
-            closeAnimation = anime.timeline({
-                // Using a smoother easing function
-                easing: 'easeInOutCubic',
-                // Match the open animation's duration for a perfect reversal
-                duration: 1200,
-                // Hide the overlay after the animation is complete
-                complete: () => {
+            closeAnimation = createTimeline({
+                defaults: {
+                    ease: 'easeInOutCubic',
+                    duration: 1200,
+                },
+                onComplete: () => {
                     modalOverlay.style.display = 'none';
                 }
             });
 
             closeAnimation
-                .add({
-                    targets: modal,
-                    opacity: [1, 0], // Reversing open animation
-                    scale: [1, 0.95], // Reversing open animation
-                    rotateY: ['0deg', '45deg'], // Reversing open animation's flip
-                    filter: ['blur(0px)', 'blur(16px)'] // Animate from clear to blurred
+                .add(modal, {
+                    opacity: [1, 0],
+                    scale: [1, 0.95],
+                    rotateY: ['0deg', '45deg'],
+                    filter: ['blur(0px)', 'blur(16px)']
                 })
-                .add({
-                    targets: modalOverlay,
-                    opacity: [1, 0], // Reversing open animation
-                    duration: 500, // Match overlay duration
-                    easing: 'easeInExpo' // Logical reverse of easeOutExpo
-                }, '-=1100'); // Adjust offset to mirror the open animation's timing
+                .add(modalOverlay, {
+                    opacity: [1, 0],
+                    duration: 500,
+                    ease: 'easeInExpo'
+                }, '-=1100');
+
+            closeAnimation.play();
         }
 
         // --- Event Listeners ---
         openModalBtn.addEventListener('click', playOpenAnimation);
         
-        // Add close event to multiple elements
         [closeModalIcon, cancelBtn, confirmBtn, modalOverlay].forEach(el => {
             el.addEventListener('click', (e) => {
-                // Only close if the click is on the overlay itself, not its children (the modal)
                 if (e.target === modalOverlay) {
                     playCloseAnimation();
-                } else if (el !== modalOverlay) { // Or if it's one of the buttons
+                } else if (el !== modalOverlay) {
                     playCloseAnimation();
                 }
             });
@@ -162,7 +159,6 @@
         modal.addEventListener('click', (e) => {
             e.stopPropagation();
         });
-
     </script>
 </body>
 </html>
