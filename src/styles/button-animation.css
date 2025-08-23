@@ -1,0 +1,37 @@
+/* Custom styles for the button container and fill effect */
+.delete-button {
+  position: relative; /* Ensure the fill is contained within the button */
+  /* DaisyUI's .btn class already sets position: relative */
+  overflow: hidden; /* Hide the fill element when its width is 0 */
+  -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+  transition: transform 0.2s ease; /* Add a smooth transition for the hover scale */
+}
+.delete-button:hover {
+  transform: scale(1.05);
+  --btn-bg: #0000;
+  --btn-fg: var(--btn-color);
+  --btn-border: var(--btn-color);
+}
+.delete-button:active {
+  transform: scale(0.85); /* Briefly shrink when first clicked */
+  --btn-fg: var(--color-error-content);
+  --btn-border: var(--btn-color);
+}
+.button-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0; /* Start with no fill */
+  background-color: var(--btn-color);
+  z-index: 1;
+}
+.button-text {
+  position: relative;
+  z-index: 2; /* Ensure text is on top of the fill */
+  transition: color 2s ease; /* Slow transition for when we exit the 'is-holding' state */
+}
+
+.delete-button.is-holding .button-text {
+  transition: color 0.3s ease; /* Fast transition for when we enter the 'is-holding' state */
+}

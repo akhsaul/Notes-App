@@ -7,7 +7,7 @@
   include:
     rootcolor, rootscrolllock, scrollbar, reset, rootscrollgutter, button, tab,
     textarea, modal, fieldset, footer, input, navbar, card, toggle, label,
-    select, badge, loading, toast, alert, join, radius, typography, properties,
+    select, badge, loading, toast, alert, tooltip, join, radius, typography, properties,
     responsive, states, responsive-extended, properties-extended,
     states-extended;
 }

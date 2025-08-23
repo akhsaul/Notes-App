@@ -6,6 +6,8 @@ export class ButtonAnimation {
     this.startText = 'Hold to confirm';
     this.processingText = 'Processing...';
     this.holdDuration = 3000;
+    this._startHold = null;
+    this._cancelHold = null;
   }
 
   setButton(button) {
@@ -55,25 +57,24 @@ export class ButtonAnimation {
       this.button.dispatchEvent(new CustomEvent('confirm', { bubbles: true }));
     };
 
-    const startHold = (e) => {
+    this._startHold = (e) => {
       e.preventDefault();
       if (fillAnimation) {
         fillAnimation.pause();
       }
       this.button.classList.add('is-holding');
 
-      fillAnimation = animate({
-        targets: btnFill,
+      fillAnimation = animate(btnFill, {
         width: '100%',
         duration: this.holdDuration,
-        easing: 'linear',
+        ease: 'linear',
       });
 
       pressTimer = setTimeout(confirmAction, this.holdDuration);
       btnText.textContent = this.processingText;
     };
 
-    const cancelHold = () => {
+    this._cancelHold = () => {
       clearTimeout(pressTimer);
       pressTimer = null;
       this.button.classList.remove('is-holding');
@@ -82,21 +83,32 @@ export class ButtonAnimation {
         fillAnimation.pause();
       }
 
-      animate({
-        targets: btnFill,
+      animate(btnFill, {
         width: '0%',
         duration: 400,
-        easing: 'easeOutExpo',
+        ease: 'easeOutExpo',
       });
 
       btnText.textContent = this.startText || originalText;
     };
 
-    this.button.addEventListener('mousedown', startHold);
-    this.button.addEventListener('touchstart', startHold, { passive: true });
+    this.button.addEventListener('mousedown', this._startHold);
+    this.button.addEventListener('touchstart', this._startHold, {
+      passive: true,
+    });
 
-    document.addEventListener('mouseup', cancelHold);
-    this.button.addEventListener('mouseleave', cancelHold);
-    document.addEventListener('touchend', cancelHold);
+    document.addEventListener('mouseup', this._cancelHold);
+    this.button.addEventListener('mouseleave', this._cancelHold);
+    document.addEventListener('touchend', this._cancelHold);
+    document.body.addEventListener('mouseleave', this._cancelHold);
+  }
+
+  destroy() {
+    this.button.removeEventListener('mousedown', this._startHold);
+    this.button.removeEventListener('touchstart', this._startHold);
+    document.removeEventListener('mouseup', this._cancelHold);
+    this.button.removeEventListener('mouseleave', this._cancelHold);
+    document.removeEventListener('touchend', this._cancelHold);
+    document.body.removeEventListener('mouseleave', this._cancelHold);
   }
 }

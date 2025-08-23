@@ -1,4 +1,5 @@
 import './styles/styles.css';
+import './styles/button-animation.css';
 import './script/animations/index.js';
 import { NotesAPI } from './script/data/data-manager.js';
 import { CardAnimation, ButtonAnimation } from './script/animations/index.js';
@@ -129,7 +130,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // render paging display
     renderPagination(notesForDisplay.length);
 
-    noteList.scrollIntoView()
+    noteList.scrollIntoView();
     // render paginated notes
     noteList.setNoteList(paginatedNotes);
   }

@@ -26,7 +26,7 @@ class NoteModal extends HTMLElement {
             <textarea id="note-body" class="textarea-ghost w-full bg-base-100 p-0" disabled readonly></textarea>
           </div>
           <div class="modal-action mt-6">
-            <button class="btn btn-soft btn-error" id="delete-btn">Delete</button>
+            <button class="btn btn-outline btn-error" id="delete-btn">Delete</button>
             <button class="btn btn-soft btn-primary" id="archive-btn"></button>
             <form method="dialog">
               <button class="btn btn-soft btn-secondary">Close</button>
@@ -44,15 +44,15 @@ class NoteModal extends HTMLElement {
     this.elementArchiveBtn = this.querySelector('#archive-btn');
 
     // Attach event listeners after content is created
-    /* this.elementDeleteBtn.addEventListener('click', (e) => {
+    this.elementDeleteBtn.addEventListener('confirm', (e) => {
       this.dispatchEvent(
         new CustomEvent('delete-note', {
-          detail: { id: e.target.dataset.id },
+          detail: { id: this.elementDeleteBtn.dataset.id },
           bubbles: true,
         })
       );
       this.modal.close();
-    }); */
+    });
 
     this.elementArchiveBtn.addEventListener('click', (e) => {
       const eventName =
@@ -110,9 +110,24 @@ class NoteModal extends HTMLElement {
 
   setDeleteAnimation(animation) {
     this.btnDeleteAnimation = animation;
+    // create a tooltip
+    const tooltip = document.createElement('div');
+    tooltip.classList.add('tooltip');
+    tooltip.dataset.tip = 'Hold 3s to Delete';
+    
+
+    // append the tooltip first
+    this.elementDeleteBtn.before(tooltip);
+    // append a new delete button
+    tooltip.innerHTML = this.elementDeleteBtn.outerHTML;
+    // remove old button
+    this.elementDeleteBtn.remove();
+    // renew reference
+    this.elementDeleteBtn = tooltip.firstChild;
+
     this.btnDeleteAnimation
       .setButton(this.elementDeleteBtn)
-      .setStartText('Hold 3s to Delete')
+      .setStartText('Delete')
       .setProcessingText('Deleting...')
       .setHoldDuration(3000)
       .apply();
