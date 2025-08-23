@@ -6,6 +6,4 @@ import './NoteModal.js';
 import './ErrorModal.js';
 import './Toast.js';
 import './SuccessModal.js';
-import NoteList from '../components/NoteList.js';
-
-customElements.define('note-list', NoteList);
+import './NoteList.js';

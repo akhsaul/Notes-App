@@ -1,8 +1,13 @@
 import './styles/styles.css';
 import './styles/button-animation.css';
+import './styles/modal-animation.css';
 import './script/animations/index.js';
 import { NotesAPI } from './script/data/data-manager.js';
-import { CardAnimation, ButtonAnimation, ModalAnimation } from './script/animations/index.js';
+import {
+  CardAnimation,
+  ButtonAnimation,
+  ModalAnimation,
+} from './script/animations/index.js';
 
 /**
  * Inspired by Kotlin Flow.debounce() (Basic concept).

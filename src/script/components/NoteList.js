@@ -93,4 +93,4 @@ class NoteList extends HTMLElement {
   }
 }
 
-export default NoteList;
+customElements.define('note-list', NoteList);
