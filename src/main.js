@@ -2,7 +2,7 @@ import './styles/styles.css';
 import './styles/button-animation.css';
 import './script/animations/index.js';
 import { NotesAPI } from './script/data/data-manager.js';
-import { CardAnimation, ButtonAnimation } from './script/animations/index.js';
+import { CardAnimation, ButtonAnimation, ModalAnimation } from './script/animations/index.js';
 
 /**
  * Inspired by Kotlin Flow.debounce() (Basic concept).
@@ -300,6 +300,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   });
 
+  noteModalElement.setModalAnimation(new ModalAnimation());
   noteModalElement.setDeleteAnimation(new ButtonAnimation());
   noteList.setAnimation(new CardAnimation());
   noteList.setNoteModal(noteModalElement);

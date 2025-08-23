@@ -10,38 +10,43 @@ class NoteModal extends HTMLElement {
   constructor() {
     super();
     this.btnDeleteAnimation = undefined;
+    this.modalAnimation = undefined;
   }
 
   connectedCallback() {
     this.innerHTML = `
-      <dialog id="note_modal" class="modal">
-      <div class="modal-box w-11/12 max-w-3xl">
-        <form method="dialog">
-          <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-        </form>
-        <div id="modal-content">
-          <h3 id="note-title" class="font-bold text-3xl mb-2"></h3>
-          <p id="note-created-at" class="text-sm text-base-content text-opacity-60 mb-6"></p>
-          <div class="prose max-w-none">
-            <textarea id="note-body" class="textarea-ghost w-full bg-base-100 p-0" disabled readonly></textarea>
-          </div>
-          <div class="modal-action mt-6">
-            <button class="btn btn-outline btn-error" id="delete-btn">Delete</button>
-            <button class="btn btn-soft btn-primary" id="archive-btn"></button>
-            <form method="dialog">
-              <button class="btn btn-soft btn-secondary">Close</button>
-            </form>
+      <div id="modal-overlay" class="modal-overlay">
+        <div id="note_modal" class="modal-box w-11/12 max-w-3xl">
+          <form method="dialog">
+            <button id="close-btn-icon" class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+          </form>
+          <div id="modal-content">
+            <h3 id="note-title" class="font-bold text-3xl mb-2"></h3>
+            <p id="note-created-at" class="text-sm text-base-content text-opacity-60 mb-6"></p>
+            <div class="prose max-w-none">
+              <textarea id="note-body" class="textarea-ghost w-full bg-base-100 p-0" disabled readonly></textarea>
+            </div>
+            <div class="modal-action mt-6">
+              <button class="btn btn-outline btn-error" id="delete-btn">Delete</button>
+              <button class="btn btn-soft btn-primary" id="archive-btn"></button>
+              <button id="close-btn-secondary" class="btn btn-soft btn-secondary">Close</button>
+            </div>
           </div>
         </div>
       </div>
-    </dialog>
     `;
+
+    this.modalOverlay = this.querySelector('#modal-overlay');
     this.modal = this.querySelector('#note_modal');
+    this.modalContent = this.querySelector('#modal-content');
+
     this.elementTitle = this.querySelector('#note-title');
     this.elementCreatedAt = this.querySelector('#note-created-at');
     this.elementBody = this.querySelector('#note-body');
     this.elementDeleteBtn = this.querySelector('#delete-btn');
     this.elementArchiveBtn = this.querySelector('#archive-btn');
+    this.elementCloseBtnIcon = this.querySelector('#close-btn-icon');
+    this.elementCloseBtnSecondary = this.querySelector('#close-btn-secondary');
 
     // Attach event listeners after content is created
     this.elementDeleteBtn.addEventListener('confirm', (e) => {
@@ -51,7 +56,7 @@ class NoteModal extends HTMLElement {
           bubbles: true,
         })
       );
-      this.modal.close();
+      this.close();
     });
 
     this.elementArchiveBtn.addEventListener('click', (e) => {
@@ -65,7 +70,25 @@ class NoteModal extends HTMLElement {
           bubbles: true,
         })
       );
-      this.modal.close();
+      this.close();
+    });
+
+    [
+      this.elementCloseBtnIcon,
+      this.elementCloseBtnSecondary,
+      this.modalOverlay,
+    ].forEach((el) => {
+      el.addEventListener('click', (e) => {
+        if (e.target === this.modalOverlay) {
+          this.close();
+        } else if (el !== this.modalOverlay) {
+          this.close();
+        }
+      });
+    });
+
+    this.modal.addEventListener('click', (e) => {
+      e.stopPropagation();
     });
   }
 
@@ -98,8 +121,12 @@ class NoteModal extends HTMLElement {
   }
 
   show() {
-    this.modal.showModal();
+    this.modalAnimation.open();
     this.autosizeTextarea();
+  }
+
+  close() {
+    this.modalAnimation.close();
   }
 
   autosizeTextarea() {
@@ -114,7 +141,6 @@ class NoteModal extends HTMLElement {
     const tooltip = document.createElement('div');
     tooltip.classList.add('tooltip');
     tooltip.dataset.tip = 'Hold 3s to Delete';
-    
 
     // append the tooltip first
     this.elementDeleteBtn.before(tooltip);
@@ -131,6 +157,11 @@ class NoteModal extends HTMLElement {
       .setProcessingText('Deleting...')
       .setHoldDuration(3000)
       .apply();
+  }
+
+  setModalAnimation(animation) {
+    animation.setOverlay(this.modalOverlay).setModal(this.modal);
+    this.modalAnimation = animation;
   }
 }
 

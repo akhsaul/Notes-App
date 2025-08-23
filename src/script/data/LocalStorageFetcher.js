@@ -7,7 +7,7 @@ import { notesData as initialNotes } from './notes.js';
  */
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-const DELAY_FETCHER = 5000
+const DELAY_FETCHER = 0
 
 export class LocalStorageFetcher extends BaseFetcher {
   /**
