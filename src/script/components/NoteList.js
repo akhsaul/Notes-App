@@ -19,7 +19,7 @@ class NoteList extends HTMLElement {
           this.noteModalElement.setAttribute('archived', note.archived);
           this.noteModalElement.show();
         } else {
-          console.warn('Note modal element is not set.');
+          console.error('Note modal element is not set.');
         }
       }
     });
@@ -63,7 +63,6 @@ class NoteList extends HTMLElement {
         'transform',
         'hover:-translate-y-1',
         'cursor-pointer',
-        'card-border',
         'note-item'
       );
       card.dataset.noteId = note.id;

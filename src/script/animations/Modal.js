@@ -1,9 +1,9 @@
-import { createTimeline, waapi } from 'animejs';
+import { createTimeline, waapi, eases } from 'animejs';
 
 export class ModalAnimation {
   constructor() {
-    this.openAnimation = null;
-    this.closeAnimation = null;
+    this.openTimeline = null;
+    this.closeTimeline = null;
   }
 
   setModal(modal) {
@@ -29,16 +29,16 @@ export class ModalAnimation {
     // while 'close animation' still playing
     // so we have to stop and free previous animation
     // to prevent glitch
-    if (this.closeAnimation) {
+    if (this.closeTimeline) {
       // stop previous close animation
       // and free up memory
-      this.closeAnimation.cancel();
-      this.closeAnimation = null;
+      this.closeTimeline.cancel();
+      this.closeTimeline = null;
     }
 
-    const animation = createTimeline({
+    const timeline = createTimeline({
       defaults: {
-        ease: 'inOutCubic',
+        ease: eases.inOutCubic,
         duration: 1200,
         autoplay: false,
       },
@@ -47,28 +47,28 @@ export class ModalAnimation {
       },
     });
 
-    animation
-      .add(this.modalOverlay, {
-        opacity: [0, 1],
-        duration: 500,
-        ease: 'outExpo',
-      })
-      .add(
-        this.modal,
-        {
-          opacity: [0, 1],
-          filter: ['blur(10px)', 'blur(0px)'],
-          perspective: ['500px', '500px'],
-          scale: [0.95, 1],
-          translateZ: ['-100px', '0px'],
-          rotateX: ['5deg', '0deg'],
-          rotateY: ['25deg', '0deg'],
-        },
-        '-=400'
-      );
+    const overlayAnimation = waapi.animate(this.modalOverlay, {
+      autoplay: false,
+      opacity: [0, 1],
+      duration: 500,
+      ease: eases.outExpo,
+    });
 
-    this.openAnimation = animation;
-    this.openAnimation.play();
+    const modalAnimation = waapi.animate(this.modal, {
+      autoplay: false,
+      opacity: [0, 1],
+      filter: ['blur(10px)', 'blur(0px)'],
+      perspective: ['500px', '500px'],
+      scale: [0.95, 1],
+      translateZ: ['-100px', '0px'],
+      rotateX: ['5deg', '0deg'],
+      rotateY: ['25deg', '0deg'],
+    });
+
+    timeline.sync(overlayAnimation).sync(modalAnimation, '-=400');
+
+    this.openTimeline = timeline;
+    this.openTimeline.play();
   }
 
   /**
@@ -80,16 +80,16 @@ export class ModalAnimation {
     // while 'open animation' still playing
     // so we have to stop and free previous animation
     // to prevent glitch
-    if (this.openAnimation) {
+    if (this.openTimeline) {
       // stop previous open animation
       // and free up memory
-      this.openAnimation.cancel();
-      this.openAnimation = null;
+      this.openTimeline.cancel();
+      this.openTimeline = null;
     }
 
-    const animation = createTimeline({
+    const timeline = createTimeline({
       defaults: {
-        ease: 'inOutCubic',
+        ease: eases.inOutCubic,
         duration: 1200,
         autoplay: false,
       },
@@ -99,27 +99,26 @@ export class ModalAnimation {
       },
     });
 
-    animation
-      .add(this.modal, {
-        opacity: [1, 0],
-        filter: ['blur(0px)', 'blur(10px)'],
-        perspective: ['500px', '500px'],
-        scale: [1, 0.95],
-        translateZ: ['0px', '-100px'],
-        rotateX: ['0deg', '5deg'],
-        rotateY: ['0deg', '25deg'],
-      })
-      .add(
-        this.modalOverlay,
-        {
-          opacity: [1, 0],
-          duration: 500,
-          ease: 'inExpo',
-        },
-        '-=1100'
-      );
+    const modalAnimation = waapi.animate(this.modal, {
+      autoplay: false,
+      opacity: [1, 0],
+      filter: ['blur(0px)', 'blur(10px)'],
+      perspective: ['500px', '500px'],
+      scale: [1, 0.95],
+      translateZ: ['0px', '-100px'],
+      rotateX: ['0deg', '5deg'],
+      rotateY: ['0deg', '25deg'],
+    });
 
-    this.closeAnimation = animation;
-    this.closeAnimation.play();
+    const overlayAnimation = waapi.animate(this.modalOverlay, {
+      autoplay: false,
+      opacity: [1, 0],
+      duration: 500,
+      ease: eases.inExpo,
+    });
+    timeline.sync(modalAnimation).sync(overlayAnimation, '-=1100');
+
+    this.closeTimeline = timeline;
+    this.closeTimeline.play();
   }
 }

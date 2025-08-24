@@ -1,4 +1,4 @@
-import { animate } from 'animejs';
+import { waapi, eases } from 'animejs';
 
 export class ButtonAnimation {
   constructor() {
@@ -62,16 +62,19 @@ export class ButtonAnimation {
     this._startHold = (e) => {
       e.preventDefault();
       if (fillAnimation) {
-        fillAnimation.pause();
+        fillAnimation.cancel();
+        fillAnimation = null;
       }
       this.button.classList.add('is-holding');
 
-      fillAnimation = animate(btnFill, {
+      // waapi doesn't support callback onComplete
+      fillAnimation = waapi.animate(btnFill, {
         width: '100%',
         duration: this.holdDuration,
-        ease: 'linear',
+        ease: eases.linear(),
       });
 
+      // +500ms to make sure the animation is done
       pressTimer = setTimeout(confirmAction, this.holdDuration);
       btnText.textContent = this.processingText;
     };
@@ -82,13 +85,14 @@ export class ButtonAnimation {
       this.button.classList.remove('is-holding');
 
       if (fillAnimation) {
-        fillAnimation.pause();
+        fillAnimation.cancel();
+        fillAnimation = null;
       }
 
-      animate(btnFill, {
+      fillAnimation = waapi.animate(btnFill, {
         width: '0%',
         duration: 400,
-        ease: 'outExpo',
+        ease: eases.outExpo,
       });
 
       btnText.textContent = this.startText || originalText;

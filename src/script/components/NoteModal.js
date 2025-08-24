@@ -38,19 +38,18 @@ class NoteModal extends HTMLElement {
     this.listElementCloseBtn = this.querySelectorAll(`.${closeBtnId}`);
 
     // Attach event listeners after content is created
-    this.elementDeleteBtn.addEventListener('delete-confirmed', (e) => {
-      this.modalAnimation.close(() => {
-        this.dispatchEvent(
-          new CustomEvent('delete-note', {
-            detail: { id: e.target.dataset.id },
-            bubbles: true,
-          })
-        );
-      });
+    this.elementDeleteBtn.addEventListener('click', (e) => {
+      this.modal.close();
+      this.dispatchEvent(
+        new CustomEvent('delete-note', {
+          detail: { id: e.target.dataset.id },
+          bubbles: true,
+        })
+      );
     });
 
     this.elementArchiveBtn.addEventListener('click', (e) => {
-      this.modalAnimation.close(() => {
+      const onComplete = () => {
         const eventName =
           e.target.dataset.archived === 'true'
             ? 'unarchive-note'
@@ -62,12 +61,23 @@ class NoteModal extends HTMLElement {
             bubbles: true,
           })
         );
-      });
+      };
+
+      if (this.modalAnimation) {
+        this.modalAnimation.close(onComplete);
+      } else {
+        this.modal.close();
+        onComplete();
+      }
     });
 
     this.listElementCloseBtn.forEach((btn) => {
       btn.addEventListener('click', () => {
-        this.modalAnimation.close();
+        if (this.modalAnimation) {
+          this.modalAnimation.close();
+        } else {
+          this.modal.close();
+        }
       });
     });
   }
@@ -122,10 +132,21 @@ class NoteModal extends HTMLElement {
     this.elementDeleteBtn.before(tooltip);
     // append a new delete button
     tooltip.innerHTML = this.elementDeleteBtn.outerHTML;
-    // remove old button
+    // remove old button & event listener
     this.elementDeleteBtn.remove();
     // renew reference
     this.elementDeleteBtn = tooltip.firstChild;
+    // attach new listener
+    this.elementDeleteBtn.addEventListener('delete-confirmed', (e) => {
+      this.modalAnimation.close(() => {
+        this.dispatchEvent(
+          new CustomEvent('delete-note', {
+            detail: { id: e.target.dataset.id },
+            bubbles: true,
+          })
+        );
+      });
+    });
 
     this.btnDeleteAnimation
       .setButton(this.elementDeleteBtn)
