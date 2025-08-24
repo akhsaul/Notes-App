@@ -5,24 +5,18 @@ class ErrorModal extends HTMLElement {
   }
 
   connectedCallback() {
-    this.innerHTML = `
-      <dialog id="error_modal" class="modal">
-        <div class="modal-box text-center justify-items-center w-fit prose">
-          <span class="loading error-icon text-error"></span>
-          <h2 class="error-message text-error text-justify mt-1 mb-1"></h2>
-          <p class="auto-close-message italic"></p>
-          <div class="modal-action">
-            <form method="dialog">
-              <button class="btn btn-soft btn-primary">OK</button>
-            </form>
-          </div>
-        </div>
-      </dialog>
-    `;
+    const modalId = 'error_modal';
+    const messageId = 'error-message';
+    const autoCloseMessageId = 'auto_close_message';
 
-    this.dialog = this.querySelector('#error_modal');
-    this.errorMessage = this.querySelector('.error-message');
-    this.autoCloseMessage = this.querySelector('.auto-close-message');
+    this.innerHTML = `<dialog id="${modalId}" class="modal"><div class="modal-box text-center w-fit prose
+    justify-items-center"><span class="loading error-icon text-error"></span><h2 class="${messageId} mb-1
+    text-error text-justify mt-1"></h2><p class="${autoCloseMessageId} italic"></p><div class="modal-action">
+    <form method="dialog"><button class="btn btn-soft btn-primary">OK</button></form></div></div></dialog>`;
+
+    this.dialog = this.querySelector(`#${modalId}`);
+    this.errorMessage = this.querySelector(`.${messageId}`);
+    this.autoCloseMessage = this.querySelector(`.${autoCloseMessageId}`);
 
     this.dialog.addEventListener('close', () => {
       clearInterval(this.countdown);

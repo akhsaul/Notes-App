@@ -1,7 +1,6 @@
 import './AppBar.js';
 import './AppFooter.js';
 import './NoteForm.js';
-import './NoteItem.js';
 import './NoteModal.js';
 import './ErrorModal.js';
 import './Toast.js';

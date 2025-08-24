@@ -6,24 +6,19 @@ class SuccessModal extends HTMLElement {
   }
 
   connectedCallback() {
-    this.innerHTML = `
-      <dialog id="success_modal" class="modal">
-        <div class="modal-box text-center justify-items-center w-fit prose">
-          <span class="loading success-icon text-success"></span>
-          <h2 class="success-message text-success text-justify mt-1 mb-1"></h2>
-          <p class="auto-close-message italic"></p>
-          <div class="modal-action">
-            <form method="dialog">
-              <button class="btn btn-soft btn-primary">OK</button>
-            </form>
-          </div>
-        </div>
-      </dialog>
-    `;
+    const modalId = 'success_modal';
+    const messageId = 'success_message';
+    const autoCloseMessageId = 'auto_close_message';
 
-    this.dialog = this.querySelector('#success_modal');
-    this.successMessage = this.querySelector('.success-message');
-    this.autoCloseMessage = this.querySelector('.auto-close-message');
+    this.innerHTML = `<dialog id="${modalId}" class="modal"><div class="modal-box text-center w-fit prose
+    justify-items-center"><span class="loading success-icon text-success"></span><h2 class="${messageId} mb-1
+    text-success text-justify mt-1"></h2><p class="${autoCloseMessageId} italic"></p><div class="modal-action">
+    <form method="dialog"><button class="btn btn-soft btn-primary">OK</button></form></div></div></dialog>`;
+
+    this.dialog = this.querySelector(`#${modalId}`);
+    this.successMessage = this.querySelector(`.${messageId}`);
+    this.autoCloseMessage = this.querySelector(`.${autoCloseMessageId}`);
+    
     this.dialog.addEventListener('close', () => {
       clearInterval(this.countdown);
       this.countdown = undefined;

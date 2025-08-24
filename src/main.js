@@ -1,6 +1,7 @@
 import './styles/styles.css';
 import './styles/button-animation.css';
 import './styles/modal-animation.css';
+import './styles/custom.css'
 import './script/animations/index.js';
 import { NotesAPI } from './script/data/data-manager.js';
 import {

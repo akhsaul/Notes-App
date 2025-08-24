@@ -8,18 +8,13 @@ class NoteForm extends HTMLElement {
     const titleId = 'note-title';
     const bodyId = 'note-body';
 
-    this.innerHTML = `
-    <div class="card bg-base-100 shadow-xl"><div class="card-body"><fieldset class="fieldset">
-    <form id="${formId}" class="flex flex-col gap-4" autocomplete="off">
-    <label class="label" for="${titleId}"><span class="label-text">Title</span></label>
-    <input type="text" id="${titleId}" placeholder="Title" class="input input-bordered w-full"
-    required minlength="6" aria-describedby="title-error"/><span id="title-error" class="text-sm mt-1"
-    aria-live="polite"></span><label class="label" for="${bodyId}"><span class="label-text">Note</span>
-    </label><textarea id="${bodyId}" placeholder="Take a note..." class="textarea textarea-bordered w-full"
-    rows="4" required minlength="6" aria-describedby="body-error"></textarea><span id="body-error"
-    class="text-sm mt-1" aria-live="polite"></span><div class="card-actions justify-end">
-    <button type="submit" class="btn btn-primary">Add Note</button></div></form></fieldset></div></div>
-    `;
+    this.innerHTML = `<div class="card bg-base-100 shadow-xl"><div class="card-body"><fieldset class="fieldset"><form id="${formId}"
+    class="flex flex-col gap-4" autocomplete="off"><label class="label" for="${titleId}"><span class="label-text">Title</span></label>
+    <input type="text" id="${titleId}" class="input-bordered input w-full" placeholder="Title" aria-describedby="title-error" required
+    minlength="6"/><span class="mt-1 text-sm" id="title-error" aria-live="polite"></span><label for="${bodyId}" class="label"><span
+    class="label-text">Note</span></label><textarea placeholder="Take a note..." class="w-full textarea textarea-bordered" rows="4" required
+    id="${bodyId}" minlength="6" aria-describedby="body-error"></textarea><span id="body-error" aria-live="polite" class="mt-1 text-sm"></span>
+    <div class="card-actions justify-end"><button type="submit" class="btn btn-primary">Add Note</button></div></form></fieldset></div></div>`;
 
     this.titleInput = this.querySelector('#note-title');
     this.bodyInput = this.querySelector('#note-body');

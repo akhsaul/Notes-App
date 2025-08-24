@@ -22,16 +22,13 @@ class NoteModal extends HTMLElement {
     const archiveBtnId = 'archive-btn';
     const closeBtnId = 'close-btn';
 
-    this.innerHTML = `
-    <dialog id="${modalId}" class="modal"><div class="modal-box w-11/12 max-w-3xl">
-    <button class="${closeBtnId} btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-    <div id="modal-content"><h3 id="${titleId}" class="font-bold text-3xl mb-2"></h3>
-    <p id="${createdAtId}" class="text-sm text-base-content text-opacity-60 mb-6"></p>
-    <div class="prose max-w-none"><textarea id="${bodyId}" class="textarea-ghost w-full bg-base-100 p-0"
-    disabled readonly></textarea></div><div class="modal-action mt-6"><button id="${deleteBtnId}" 
-    class="btn btn-outline btn-error">Delete</button><button class="btn btn-soft btn-primary" id="${archiveBtnId}">
-    </button><button class="${closeBtnId} btn btn-soft btn-secondary">Close</button></div></div></div></dialog>
-    `;
+    this.innerHTML = `<dialog id="${modalId}" class="modal"><div class="modal-box w-11/12 max-w-3xl"><button class="${closeBtnId}
+    btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button><div id="modal-content"><h3 id="${titleId}" class="font-bold
+    text-3xl mb-2"></h3><p id="${createdAtId}" class="text-sm text-base-content text-opacity-60 mb-6"></p><div class="max-w-none
+    prose"><textarea id="${bodyId}" class="textarea-ghost w-full bg-base-100 p-0" disabled readonly></textarea></div><div class="mt-6
+    modal-action"><button id="${deleteBtnId}" class="btn btn-outline btn-error">Delete</button><button class="btn btn-soft btn-primary"
+    id="${archiveBtnId}"></button><button class="${closeBtnId} btn btn-soft btn-secondary">Close</button></div></div></div></dialog>`;
+
     this.modal = this.querySelector(`#${modalId}`);
     this.elementTitle = this.querySelector(`#${titleId}`);
     this.elementCreatedAt = this.querySelector(`#${createdAtId}`);

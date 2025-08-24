@@ -1,4 +1,4 @@
-import { createTimeline } from 'animejs';
+import { createTimeline, stagger } from 'animejs';
 
 export class CardAnimation {
   /**
