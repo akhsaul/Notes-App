@@ -29,9 +29,4 @@
 .button-text {
   position: relative;
   z-index: 2; /* Ensure text is on top of the fill */
-  transition: color 2s ease; /* Slow transition for when we exit the 'is-holding' state */
-}
-
-.delete-button.is-holding .button-text {
-  transition: color 0.3s ease; /* Fast transition for when we enter the 'is-holding' state */
 }

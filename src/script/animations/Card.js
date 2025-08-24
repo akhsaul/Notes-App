@@ -15,12 +15,12 @@ export class CardAnimation {
         hoverAnimation.restart();
         return;
       }
-      const target = { opacity: 0 };
+      const target = { progress: 0 };
       const startColor = utils.get(card, '--color-base-100');
       const targetColor = utils.get(card, '--color-accent');
 
       hoverAnimation = animate(target, {
-        opacity: [0, 100],
+        progress: 100,
         onRender: (anim) => {
           const t = (anim.currentTime % duration) / duration;
           // Switch to target halfway through, then back — no interpolation
@@ -36,7 +36,7 @@ export class CardAnimation {
 
     card.addEventListener('mouseleave', () => {
       if (hoverAnimation) {
-        hoverAnimation.pause();
+        hoverAnimation.cancel();
       }
       card.style.borderColor = 'transparent';
     });

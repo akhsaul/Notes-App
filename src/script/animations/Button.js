@@ -1,4 +1,4 @@
-import { waapi, eases } from 'animejs';
+import { eases, animate } from 'animejs';
 
 export class ButtonAnimation {
   constructor() {
@@ -8,6 +8,7 @@ export class ButtonAnimation {
     this.holdDuration = 3000;
     this._startHold = null;
     this._cancelHold = null;
+    this.isInitialized = false;
   }
 
   setButton(button) {
@@ -36,6 +37,11 @@ export class ButtonAnimation {
       return;
     }
 
+    if (this.isInitialized) {
+      console.warn('Button animation already applied.');
+      return;
+    }
+
     const originalText = this.button.textContent.trim();
     this.button.innerHTML = '';
 
@@ -50,71 +56,53 @@ export class ButtonAnimation {
     this.button.appendChild(btnText);
     this.button.classList.add('delete-button');
 
-    let pressTimer = null;
     let fillAnimation = null;
 
-    const confirmAction = () => {
-      this.button.dispatchEvent(
-        new CustomEvent('delete-confirmed', { bubbles: true })
-      );
-    };
-
-    this._startHold = (e) => {
+    const startHold = (e) => {
       e.preventDefault();
       if (fillAnimation) {
         fillAnimation.cancel();
-        fillAnimation = null;
       }
-      this.button.classList.add('is-holding');
 
-      // waapi doesn't support callback onComplete
-      fillAnimation = waapi.animate(btnFill, {
+      // enter transition for text
+      btnText.style.transition = `color 500ms ease`;
+
+      fillAnimation = animate(btnFill, {
         width: '100%',
         duration: this.holdDuration,
         ease: eases.linear(),
+        onComplete: () => {
+          this.button.dispatchEvent(
+            new CustomEvent('delete-confirmed', { bubbles: true })
+          );
+        },
       });
 
-      // +500ms to make sure the animation is done
-      pressTimer = setTimeout(confirmAction, this.holdDuration);
       btnText.textContent = this.processingText;
     };
 
-    this._cancelHold = () => {
-      clearTimeout(pressTimer);
-      pressTimer = null;
-      this.button.classList.remove('is-holding');
+    const cancelHold = () => {
+      // exit transition for text
+      btnText.style.transition = `color ${this.holdDuration}ms ease`;
 
       if (fillAnimation) {
         fillAnimation.cancel();
-        fillAnimation = null;
       }
 
-      fillAnimation = waapi.animate(btnFill, {
+      fillAnimation = animate(btnFill, {
         width: '0%',
-        duration: 400,
+        duration: this.holdDuration,
         ease: eases.outExpo,
       });
 
       btnText.textContent = this.startText || originalText;
     };
 
-    this.button.addEventListener('mousedown', this._startHold);
-    this.button.addEventListener('touchstart', this._startHold, {
-      passive: true,
-    });
+    // starting only when user press the button element
+    this.button.addEventListener('pointerdown', startHold);
 
-    document.addEventListener('mouseup', this._cancelHold);
-    this.button.addEventListener('mouseleave', this._cancelHold);
-    document.addEventListener('touchend', this._cancelHold);
-    document.body.addEventListener('mouseleave', this._cancelHold);
-  }
-
-  destroy() {
-    this.button.removeEventListener('mousedown', this._startHold);
-    this.button.removeEventListener('touchstart', this._startHold);
-    document.removeEventListener('mouseup', this._cancelHold);
-    this.button.removeEventListener('mouseleave', this._cancelHold);
-    document.removeEventListener('touchend', this._cancelHold);
-    document.body.removeEventListener('mouseleave', this._cancelHold);
+    // cancel when user release input (mouse, touch, etc) in any element
+    document.addEventListener('pointerup', cancelHold);
+    this.isInitialized = true;
   }
 }

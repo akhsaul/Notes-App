@@ -93,7 +93,13 @@ export class ModalAnimation {
         duration: 1200,
         autoplay: false,
       },
+      onPause: () => {
+        // make sure the modal is closed
+        // when it's cancelled/paused
+        this.modal.close();
+      },
       onComplete: () => {
+        // called only when it's complete
         this.modal.close();
         if (onComplete) onComplete();
       },

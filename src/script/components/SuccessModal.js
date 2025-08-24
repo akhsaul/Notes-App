@@ -18,7 +18,7 @@ class SuccessModal extends HTMLElement {
     this.dialog = this.querySelector(`#${modalId}`);
     this.successMessage = this.querySelector(`.${messageId}`);
     this.autoCloseMessage = this.querySelector(`.${autoCloseMessageId}`);
-    
+
     this.dialog.addEventListener('close', () => {
       clearInterval(this.countdown);
       this.countdown = undefined;
