@@ -3,6 +3,7 @@ class NoteList extends HTMLElement {
     super();
     this.notes = [];
     this.noteModalElement = undefined;
+    this.animation = undefined;
   }
 
   connectedCallback() {
@@ -18,7 +19,7 @@ class NoteList extends HTMLElement {
           this.noteModalElement.setAttribute('archived', note.archived);
           this.noteModalElement.show();
         } else {
-          console.warn('Note modal element is not set.');
+          console.error('Note modal element is not set.');
         }
       }
     });
@@ -41,6 +42,8 @@ class NoteList extends HTMLElement {
       'gap-6'
     );
 
+    const notesElements = [];
+
     this.notes.forEach((note) => {
       const formattedDate = new Date(note.createdAt).toLocaleDateString(
         undefined,
@@ -51,17 +54,32 @@ class NoteList extends HTMLElement {
         }
       );
 
-      this.innerHTML += `
-      <div class='card bg-base-100 shadow-xl transition-transform transform hover:-translate-y-1 cursor-pointer card-border'
-       data-note-id=${note.id}>
-        <div class="card-body p-6 flex flex-col">
-            <h2 class="card-title note-title-truncate">${note.title}</h2>
-            <p class="text-sm text-base-content text-opacity-60 grow-0">${formattedDate}</p>
-            <p class="note-body-truncate">${note.body}</p>
-        </div>
-      </div>
-    `;
+      const card = document.createElement('div');
+      card.classList.add(
+        'card',
+        'bg-base-100',
+        'shadow-xl',
+        'transition-transform',
+        'transform',
+        'hover:-translate-y-1',
+        'cursor-pointer',
+        'note-item'
+      );
+      card.dataset.noteId = note.id;
+      card.style.opacity = 0;
+      card.innerHTML = `<div class="card-body p-6 flex flex-col"><h2 class="card-title title">${note.title}</h2>
+      <p class="text-sm text-base-content text-opacity-60 grow-0">${formattedDate}</p><p class="body">${note.body}</p></div>`;
+      this.appendChild(card);
+      notesElements.push(card);
     });
+
+    if (this.animation) {
+      this.animation.add(notesElements);
+    } else {
+      this.querySelectorAll('.card').forEach(
+        (card) => (card.style.opacity = 1)
+      );
+    }
   }
 
   setNoteList(notes) {
@@ -71,6 +89,10 @@ class NoteList extends HTMLElement {
 
   setNoteModal(element) {
     this.noteModalElement = element;
+  }
+
+  setAnimation(animation) {
+    this.animation = animation;
   }
 }
 

@@ -1,3 +1,4 @@
+import { DicodingNotesAPI } from './DicodingNotesAPI.js';
 import { LocalStorageFetcher } from './LocalStorageFetcher.js';
 
 export class NotesAPI {
@@ -5,9 +6,9 @@ export class NotesAPI {
    * @type {NotesAPI}
    */
   static #instance;
-  API_MODE = 'local';
+  API_MODE = 'remote';
   /**
-   * @type {import('./BaseFetcher').BaseFetcher}
+   * @type {import('./BaseFetcher.js').BaseFetcher}
    */
   fetcher;
 
@@ -37,7 +38,7 @@ export class NotesAPI {
     if (this.API_MODE === 'local') {
       this.fetcher = LocalStorageFetcher.getInstance();
     } else if (this.API_MODE === 'remote') {
-      throw new Error('Not implemented yet');
+      this.fetcher = DicodingNotesAPI.getInstance();
     } else {
       throw new Error(
         `Mode only accepts 'local' or 'remote', got: ${this.API_MODE}`
@@ -62,8 +63,10 @@ export class NotesAPI {
   async loadAllNotes(successListener, errorListener) {
     this.loadingListener(true);
     try {
-      const archivedNotes = await this._getFetcher().loadAllNotes(true);
-      const activeNotes = await this._getFetcher().loadAllNotes(false);
+      const [archivedNotes, activeNotes] = await Promise.all([
+        this._getFetcher().loadAllNotes(true),
+        this._getFetcher().loadAllNotes(false),
+      ]);
       const allNotes = activeNotes.concat(archivedNotes);
 
       this.loadingListener(false);

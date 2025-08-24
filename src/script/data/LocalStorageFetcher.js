@@ -7,6 +7,8 @@ import { notesData as initialNotes } from './notes.js';
  */
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+const DELAY_FETCHER = 5000;
+
 export class LocalStorageFetcher extends BaseFetcher {
   /**
    * @type {LocalStorageFetcher}
@@ -56,14 +58,14 @@ export class LocalStorageFetcher extends BaseFetcher {
   }
 
   async loadAllNotes(archived = false) {
-    await delay(5000);
+    await delay(DELAY_FETCHER);
 
     const notes = this.notesData.filter((note) => note.archived === archived);
     return notes;
   }
 
   async getNote(id) {
-    await delay(5000);
+    await delay(DELAY_FETCHER);
 
     const note = this.notesData.find((note) => note.id === id);
     if (note) {
@@ -74,7 +76,7 @@ export class LocalStorageFetcher extends BaseFetcher {
   }
 
   async archiveNote(noteId, archived) {
-    await delay(5000);
+    await delay(DELAY_FETCHER);
 
     let noteModified = false;
     const newData = this.notesData.map((n) => {
@@ -97,7 +99,7 @@ export class LocalStorageFetcher extends BaseFetcher {
   }
 
   async saveNote(note) {
-    await delay(5000);
+    await delay(DELAY_FETCHER);
 
     const newNote = {
       ...note,
@@ -111,7 +113,7 @@ export class LocalStorageFetcher extends BaseFetcher {
   }
 
   async deleteNote(noteId) {
-    await delay(5000);
+    await delay(DELAY_FETCHER);
 
     const newData = this.notesData.filter((n) => n.id !== noteId);
     if (newData.length === this.notesData.length) {

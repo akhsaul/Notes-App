@@ -1,0 +1,79 @@
+.note-item .title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  overflow: hidden;
+  text-align: justify;
+}
+.note-item .body {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+  text-align: justify;
+}
+
+textarea {
+  overflow-wrap: break-word;
+  resize: none;
+  /* Add a vertical scrollbar only when content overflows the max-height */
+  overflow-y: auto;
+}
+
+.modal .prose textarea {
+  /* Set a max-height to prevent it from growing indefinitely */
+  max-height: 40vh;
+}
+
+#loading_modal .loading-spinner {
+  min-width: 6vw;
+}
+
+#loading_modal .modal-box {
+  width: fit-content;
+}
+
+.prose {
+  --font-title: Outfit, Noto Sans JP, Noto Sans, Vazirmatn, sans-serif;
+}
+
+.prose h1,
+.prose h2,
+.prose h3 {
+  font-family: var(--font-title);
+}
+
+.error-icon {
+  min-width: 6vw;
+  mask-image: url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%20-960%20960%20960%22%3E%3Cpath%20d%3D%22M480-280q17%200%2028.5-11.5T520-320t-11.5-28.5T480-360t-28.5%2011.5T440-320t11.5%2028.5T480-280m-40-160h80v-240h-80zm40%20360q-83%200-156-31.5T197-197t-85.5-127T80-480t31.5-156T197-763t127-85.5T480-880t156%2031.5T763-763t85.5%20127T880-480t-31.5%20156T763-197t-127%2085.5T480-80m0-80q134%200%20227-93t93-227-93-227-227-93-227%2093-93%20227%2093%20227%20227%2093m0-320%22%2F%3E%3C%2Fsvg%3E');
+}
+
+.success-icon {
+  min-width: 6vw;
+  mask-image: url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%20-960%20960%20960%22%3E%3Cpath%20d%3D%22m424-296%20282-282-56-56-226%20226-114-114-56%2056zm56%20216q-83%200-156-31.5T197-197t-85.5-127T80-480t31.5-156T197-763t127-85.5T480-880t156%2031.5T763-763t85.5%20127T880-480t-31.5%20156T763-197t-127%2085.5T480-80m0-80q134%200%20227-93t93-227-93-227-227-93-227%2093-93%20227%2093%20227%20227%2093m0-320%22%2F%3E%3C%2Fsvg%3E');
+}
+
+.icon {
+  aspect-ratio: 1;
+  mask-position: center;
+  width: calc(var(--size-selector, 0.25rem) * 6);
+  background-color: currentColor;
+}
+
+.dark-icon {
+  mask-image: url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2220%22%20height%3D%2220%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20stroke-width%3D%222%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20d%3D%22M21%2012.79A9%209%200%201%201%2011.21%203%207%207%200%200%200%2021%2012.79%22%2F%3E%3C%2Fsvg%3E');
+}
+
+.light-icon {
+  mask-image: url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2220%22%20height%3D%2220%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20stroke-width%3D%222%22%20viewBox%3D%220%200%2024%2024%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%225%22%2F%3E%3Cpath%20d%3D%22M12%201v2m0%2018v2M4.2%204.2l1.4%201.4m12.8%2012.8%201.4%201.4M1%2012h2m18%200h2M4.2%2019.8l1.4-1.4M18.4%205.6l1.4-1.4%22%2F%3E%3C%2Fsvg%3E');
+}
+
+.linkedin-icon {
+  mask-image: url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20fill%3D%22currentColor%22%3E%3Cpath%20d%3D%22M19%200H5a5%205%200%200%200-5%205v14a5%205%200%200%200%205%205h14a5%205%200%200%200%205-5V5a5%205%200%200%200-5-5M8%2019H5V8h3zM6.5%206.732c-.966%200-1.75-.79-1.75-1.764s.784-1.764%201.75-1.764%201.75.79%201.75%201.764-.783%201.764-1.75%201.764M20%2019h-3v-5.604c0-3.368-4-3.113-4%200V19h-3V8h3v1.765c1.396-2.586%207-2.777%207%202.476z%22%2F%3E%3C%2Fsvg%3E');
+}
+
+.github-icon {
+  mask-image: url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20fill%3D%22currentColor%22%3E%3Cpath%20d%3D%22M12%200C5.374%200%200%205.373%200%2012c0%205.302%203.438%209.8%208.207%2011.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729%201.205.084%201.839%201.237%201.839%201.237%201.07%201.834%202.807%201.304%203.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931%200-1.311.469-2.381%201.236-3.221-.124-.303-.535-1.524.117-3.176%200%200%201.008-.322%203.301%201.23A11.5%2011.5%200%200%201%2012%205.803c1.02.005%202.047.138%203.006.404%202.291-1.552%203.297-1.23%203.297-1.23.653%201.653.242%202.874.118%203.176.77.84%201.235%201.91%201.235%203.221%200%204.609-2.807%205.624-5.479%205.921.43.372.823%201.102.823%202.222v3.293c0%20.319.192.694.801.576C20.566%2021.797%2024%2017.3%2024%2012c0-6.627-5.373-12-12-12%22%2F%3E%3C%2Fsvg%3E');
+}

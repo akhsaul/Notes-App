@@ -1,13 +1,14 @@
-import './components/AppBar.js';
-import './components/AppFooter.js';
-import './components/NoteForm.js';
-import './components/NoteItem.js';
-import './components/NoteModal.js';
-import './components/ErrorModal.js';
-import './components/Toast.js';
-import './components/SuccessModal.js';
-import './components/NoteList.js';
-import { NotesAPI } from './data/data-manager.js';
+import './styles/styles.css';
+import './styles/button-animation.css';
+import './styles/modal-animation.css';
+import './styles/custom.css';
+import './script/animations/index.js';
+import { NotesAPI } from './script/data/data-manager.js';
+import {
+  CardAnimation,
+  ButtonAnimation,
+  ModalAnimation,
+} from './script/animations/index.js';
 
 /**
  * Inspired by Kotlin Flow.debounce() (Basic concept).
@@ -39,7 +40,7 @@ function debounce(func, delay = 500) {
   };
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   function getItemsPerPage() {
     if (window.innerWidth >= 1024) {
       return 9; // lg
@@ -116,11 +117,14 @@ document.addEventListener('DOMContentLoaded', () => {
       (note) => note.archived === isArchivedTab
     );
 
-    updateTabCounts(
-      isFilterActive,
-      notesForDisplay.length,
-      filteredNotes.length - notesForDisplay.length
-    );
+    const activeCount = isArchivedTab
+      ? filteredNotes.length - notesForDisplay.length
+      : notesForDisplay.length;
+    const archivedCount = isArchivedTab
+      ? notesForDisplay.length
+      : filteredNotes.length - notesForDisplay.length;
+
+    updateTabCounts(isFilterActive, activeCount, archivedCount);
 
     notesForDisplay.sort((a, b) => {
       const dateA = new Date(a.createdAt);
@@ -135,11 +139,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // render paging display
     renderPagination(notesForDisplay.length);
 
+    noteList.scrollIntoView();
     // render paginated notes
     noteList.setNoteList(paginatedNotes);
   }
 
-  function updateTabCounts(isFilterActive, archivedCount, activeCount) {
+  function updateTabCounts(isFilterActive, activeCount, archivedCount) {
     tabs.forEach((tab) => {
       const badge = tab.querySelector('.badge');
 
@@ -304,6 +309,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  noteModalElement.setModalAnimation(new ModalAnimation());
+  noteModalElement.setDeleteAnimation(new ButtonAnimation());
+  noteList.setAnimation(new CardAnimation());
   noteList.setNoteModal(noteModalElement);
   toast.setAttribute('offset-top', `${appBar.offsetHeight}px`);
   loadAndRenderAllNotes();

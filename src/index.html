@@ -9,10 +9,8 @@
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
     <link rel="manifest" href="site.webmanifest" />
     <link
-      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;600&amp;family=Noto+Sans+JP:wght@300;900&amp;family=Noto+Sans:wght@300;900&amp;family=Vazirmatn:wght@300;900&amp;display=swap"
-      rel="stylesheet" />
-    <link href="styles/styles.css" rel="stylesheet" />
-    <script src="main.js" type="module"></script>
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;600&amp;family=Noto+Sans+JP:wght@300;900&amp;family=Noto+Sans:wght@300;900&amp;family=Vazirmatn:wght@300;900&amp;display=swap" />
   </head>
   <body class="bg-base-200">
     <app-bar></app-bar>
@@ -21,17 +19,15 @@
         <h2 class="text-2xl font-bold mb-6">Add a New Note</h2>
         <note-form></note-form>
       </div>
-
       <div>
         <h2 class="text-2xl font-bold mb-6">My Notes</h2>
-
         <div class="p-4 bg-base-100 rounded-xl shadow mb-6">
           <div
             class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 items-end">
             <fieldset class="fieldset sm:col-span-2 md:col-span-3">
-              <label class="label" for="search-input"
-                ><span class="label-text">Search</span></label
-              >
+              <label class="label" for="search-input">
+                <span class="label-text">Search</span>
+              </label>
               <input
                 type="search"
                 id="search-input"
@@ -39,27 +35,27 @@
                 class="input input-bordered w-full" />
             </fieldset>
             <fieldset class="fieldset">
-              <label class="label" for="date-from"
-                ><span class="label-text">From</span></label
-              >
+              <label class="label" for="date-from">
+                <span class="label-text">From</span>
+              </label>
               <input
                 type="date"
                 id="date-from"
                 class="input input-bordered w-full" />
             </fieldset>
             <fieldset class="fieldset">
-              <label class="label" for="date-to"
-                ><span class="label-text">To</span></label
-              >
+              <label class="label" for="date-to">
+                <span class="label-text">To</span>
+              </label>
               <input
                 type="date"
                 id="date-to"
                 class="input input-bordered w-full" />
             </fieldset>
             <fieldset class="fieldset">
-              <label class="label" for="sort-by"
-                ><span class="label-text">Sort by</span></label
-              >
+              <label class="label" for="sort-by">
+                <span class="label-text">Sort by</span>
+              </label>
               <select id="sort-by" class="select select-bordered w-full">
                 <option value="newest">Newest</option>
                 <option value="oldest">Oldest</option>
@@ -67,29 +63,25 @@
             </fieldset>
           </div>
         </div>
-
         <div role="tablist" class="tabs tabs-lift" id="notes-tabs">
           <a role="tab" class="tab tab-active" data-tab="active"
             >Active
             <span
-              class="badge badge-soft badge-info badge-sm ml-2 hidden"></span
-          ></a>
+              class="badge badge-soft badge-info badge-sm ml-2 hidden"></span>
+          </a>
           <a role="tab" class="tab" data-tab="archived"
             >Archived
             <span
-              class="badge badge-soft badge-info badge-sm ml-2 hidden"></span
-          ></a>
+              class="badge badge-soft badge-info badge-sm ml-2 hidden"></span>
+          </a>
         </div>
-
         <div
           class="bg-base-100 p-6 rounded-b-xl rounded-tr-xl shadow-lg min-h-96">
           <note-list></note-list>
         </div>
-
         <div id="pagination-container" class="flex justify-center mt-8"></div>
       </div>
     </main>
-
     <note-modal></note-modal>
     <dialog id="loading_modal" class="modal">
       <div class="modal-box text-center w-fit">
