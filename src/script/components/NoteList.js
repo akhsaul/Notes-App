@@ -60,12 +60,9 @@ class NoteList extends HTMLElement {
       card.dataset.noteId = note.id;
       card.style.opacity = 0;
       card.innerHTML = `
-        <div class="card-body p-6 flex flex-col">
-            <h2 class="card-title note-title-truncate">${note.title}</h2>
-            <p class="text-sm text-base-content text-opacity-60 grow-0">${formattedDate}</p>
-            <p class="note-body-truncate">${note.body}</p>
-        </div>
-    `;
+      <div class="card-body p-6 flex flex-col"><h2 class="card-title note-title-truncate">${note.title}</h2>
+      <p class="text-sm text-base-content text-opacity-60 grow-0">${formattedDate}</p>
+      <p class="note-body-truncate">${note.body}</p></div>`;
       this.appendChild(card);
       notesElements.push(card);
     });

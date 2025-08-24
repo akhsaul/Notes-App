@@ -54,7 +54,9 @@ export class ButtonAnimation {
     let fillAnimation = null;
 
     const confirmAction = () => {
-      this.button.dispatchEvent(new CustomEvent('confirm', { bubbles: true }));
+      this.button.dispatchEvent(
+        new CustomEvent('delete-confirmed', { bubbles: true })
+      );
     };
 
     this._startHold = (e) => {
@@ -86,7 +88,7 @@ export class ButtonAnimation {
       animate(btnFill, {
         width: '0%',
         duration: 400,
-        ease: 'easeOutExpo',
+        ease: 'outExpo',
       });
 
       btnText.textContent = this.startText || originalText;

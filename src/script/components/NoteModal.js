@@ -10,85 +10,68 @@ class NoteModal extends HTMLElement {
   constructor() {
     super();
     this.btnDeleteAnimation = undefined;
-    this.modalAnimation = undefined;
   }
 
   connectedCallback() {
+    // make it easy to change the identifier
+    const modalId = 'note_modal';
+    const titleId = 'note-title';
+    const createdAtId = 'note-created-at';
+    const bodyId = 'note-body';
+    const deleteBtnId = 'delete-btn';
+    const archiveBtnId = 'archive-btn';
+    const closeBtnId = 'close-btn';
+
     this.innerHTML = `
-      <div id="modal-overlay" class="modal-overlay">
-        <div id="note_modal" class="modal-box w-11/12 max-w-3xl">
-          <form method="dialog">
-            <button id="close-btn-icon" class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-          </form>
-          <div id="modal-content">
-            <h3 id="note-title" class="font-bold text-3xl mb-2"></h3>
-            <p id="note-created-at" class="text-sm text-base-content text-opacity-60 mb-6"></p>
-            <div class="prose max-w-none">
-              <textarea id="note-body" class="textarea-ghost w-full bg-base-100 p-0" disabled readonly></textarea>
-            </div>
-            <div class="modal-action mt-6">
-              <button class="btn btn-outline btn-error" id="delete-btn">Delete</button>
-              <button class="btn btn-soft btn-primary" id="archive-btn"></button>
-              <button id="close-btn-secondary" class="btn btn-soft btn-secondary">Close</button>
-            </div>
-          </div>
-        </div>
-      </div>
+    <dialog id="${modalId}" class="modal"><div class="modal-box w-11/12 max-w-3xl">
+    <button class="${closeBtnId} btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+    <div id="modal-content"><h3 id="${titleId}" class="font-bold text-3xl mb-2"></h3>
+    <p id="${createdAtId}" class="text-sm text-base-content text-opacity-60 mb-6"></p>
+    <div class="prose max-w-none"><textarea id="${bodyId}" class="textarea-ghost w-full bg-base-100 p-0"
+    disabled readonly></textarea></div><div class="modal-action mt-6"><button id="${deleteBtnId}" 
+    class="btn btn-outline btn-error">Delete</button><button class="btn btn-soft btn-primary" id="${archiveBtnId}">
+    </button><button class="${closeBtnId} btn btn-soft btn-secondary">Close</button></div></div></div></dialog>
     `;
-
-    this.modalOverlay = this.querySelector('#modal-overlay');
-    this.modal = this.querySelector('#note_modal');
-    this.modalContent = this.querySelector('#modal-content');
-
-    this.elementTitle = this.querySelector('#note-title');
-    this.elementCreatedAt = this.querySelector('#note-created-at');
-    this.elementBody = this.querySelector('#note-body');
-    this.elementDeleteBtn = this.querySelector('#delete-btn');
-    this.elementArchiveBtn = this.querySelector('#archive-btn');
-    this.elementCloseBtnIcon = this.querySelector('#close-btn-icon');
-    this.elementCloseBtnSecondary = this.querySelector('#close-btn-secondary');
+    this.modal = this.querySelector(`#${modalId}`);
+    this.elementTitle = this.querySelector(`#${titleId}`);
+    this.elementCreatedAt = this.querySelector(`#${createdAtId}`);
+    this.elementBody = this.querySelector(`#${bodyId}`);
+    this.elementDeleteBtn = this.querySelector(`#${deleteBtnId}`);
+    this.elementArchiveBtn = this.querySelector(`#${archiveBtnId}`);
+    this.listElementCloseBtn = this.querySelectorAll(`.${closeBtnId}`);
 
     // Attach event listeners after content is created
-    this.elementDeleteBtn.addEventListener('confirm', (e) => {
-      this.dispatchEvent(
-        new CustomEvent('delete-note', {
-          detail: { id: this.elementDeleteBtn.dataset.id },
-          bubbles: true,
-        })
-      );
-      this.close();
-    });
-
-    this.elementArchiveBtn.addEventListener('click', (e) => {
-      const eventName =
-        e.target.dataset.archived === 'true'
-          ? 'unarchive-note'
-          : 'archive-note';
-      this.dispatchEvent(
-        new CustomEvent(eventName, {
-          detail: { id: e.target.dataset.id },
-          bubbles: true,
-        })
-      );
-      this.close();
-    });
-
-    [
-      this.elementCloseBtnIcon,
-      this.elementCloseBtnSecondary,
-      this.modalOverlay,
-    ].forEach((el) => {
-      el.addEventListener('click', (e) => {
-        if (e.target === this.modalOverlay) {
-          this.close();
-        } else if (el !== this.modalOverlay) {
-          this.close();
-        }
+    this.elementDeleteBtn.addEventListener('delete-confirmed', (e) => {
+      this.modalAnimation.close(() => {
+        this.dispatchEvent(
+          new CustomEvent('delete-note', {
+            detail: { id: e.target.dataset.id },
+            bubbles: true,
+          })
+        );
       });
     });
 
-    this.modal.addEventListener('click', (e) => {
-      e.stopPropagation();
+    this.elementArchiveBtn.addEventListener('click', (e) => {
+      this.modalAnimation.close(() => {
+        const eventName =
+          e.target.dataset.archived === 'true'
+            ? 'unarchive-note'
+            : 'archive-note';
+
+        this.dispatchEvent(
+          new CustomEvent(eventName, {
+            detail: { id: e.target.dataset.id },
+            bubbles: true,
+          })
+        );
+      });
+    });
+
+    this.listElementCloseBtn.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        this.modalAnimation.close();
+      });
     });
   }
 
@@ -125,10 +108,6 @@ class NoteModal extends HTMLElement {
     this.autosizeTextarea();
   }
 
-  close() {
-    this.modalAnimation.close();
-  }
-
   autosizeTextarea() {
     // Temporarily reset height to calculate the true scroll height
     this.elementBody.style.height = 'auto';
@@ -158,9 +137,8 @@ class NoteModal extends HTMLElement {
       .setHoldDuration(3000)
       .apply();
   }
-
   setModalAnimation(animation) {
-    animation.setOverlay(this.modalOverlay).setModal(this.modal);
+    animation.setModal(this.modal);
     this.modalAnimation = animation;
   }
 }

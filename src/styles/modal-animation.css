@@ -1,17 +1,7 @@
-
 .modal-overlay {
-  display: none;
+  background: oklch(0% 0 0/.4);
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.75);
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-  perspective: 1200px;
-}
-
-#note_modal {
-  opacity: 0;
-  transform: scale(0.95) rotateY(45deg);
-  filter: blur(16px);
+  pointer-events: none;
+  z-index: 10000000;
 }
