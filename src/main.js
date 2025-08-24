@@ -1,7 +1,7 @@
 import './styles/styles.css';
 import './styles/button-animation.css';
 import './styles/modal-animation.css';
-import './styles/custom.css'
+import './styles/custom.css';
 import './script/animations/index.js';
 import { NotesAPI } from './script/data/data-manager.js';
 import {
@@ -117,11 +117,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       (note) => note.archived === isArchivedTab
     );
 
-    updateTabCounts(
-      isFilterActive,
-      notesForDisplay.length,
-      filteredNotes.length - notesForDisplay.length
-    );
+    const activeCount = isArchivedTab
+      ? filteredNotes.length - notesForDisplay.length
+      : notesForDisplay.length;
+    const archivedCount = isArchivedTab
+      ? notesForDisplay.length
+      : filteredNotes.length - notesForDisplay.length;
+
+    updateTabCounts(isFilterActive, activeCount, archivedCount);
 
     notesForDisplay.sort((a, b) => {
       const dateA = new Date(a.createdAt);
@@ -141,7 +144,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     noteList.setNoteList(paginatedNotes);
   }
 
-  function updateTabCounts(isFilterActive, archivedCount, activeCount) {
+  function updateTabCounts(isFilterActive, activeCount, archivedCount) {
     tabs.forEach((tab) => {
       const badge = tab.querySelector('.badge');
 

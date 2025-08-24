@@ -24,21 +24,12 @@ export class DicodingNotesAPI extends BaseFetcher {
   }
 
   async _fetch(url, options = {}) {
-    this.loadingListener(true);
-    try {
-      const response = await fetch(url, options);
-      const data = await response.json();
-      if (data.status !== 'success') {
-        throw new Error(data.message);
-      }
-      this.successListener(data.data);
-      return data.data;
-    } catch (error) {
-      this.errorListener(error.message);
-      throw error;
-    } finally {
-      this.loadingListener(false);
+    const response = await fetch(url, options);
+    const data = await response.json();
+    if (data.status !== 'success') {
+      throw new Error(data.message);
     }
+    return data.data;
   }
 
   async loadAllNotes(archived = false) {

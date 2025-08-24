@@ -1,4 +1,4 @@
-import { createTimeline, stagger, waapi, eases, animate, utils } from 'animejs';
+import { createTimeline, stagger, waapi, eases, animate } from 'animejs';
 
 export class CardAnimation {
   constructor() {
@@ -9,6 +9,8 @@ export class CardAnimation {
     let hoverAnimation = null;
     const duration = 1000;
     card.style.border = 'var(--border) solid transparent';
+    const startColor = 'var(--color-base-100)';
+    const targetColor = 'var(--color-accent)';
 
     card.addEventListener('mouseenter', () => {
       if (hoverAnimation) {
@@ -16,9 +18,6 @@ export class CardAnimation {
         return;
       }
       const target = { progress: 0 };
-      const startColor = utils.get(card, '--color-base-100');
-      const targetColor = utils.get(card, '--color-accent');
-
       hoverAnimation = animate(target, {
         progress: 100,
         onRender: (anim) => {
